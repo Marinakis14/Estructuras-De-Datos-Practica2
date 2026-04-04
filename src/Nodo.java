@@ -96,6 +96,73 @@ public class Nodo<T extends Comparable<T>> {
         return Math.max(profundidadIzquierda, profundidadDerecha) + 1;
     }
 
+    // Metodo para añadir todos los elementos de un cierto nivel del arbol a una lista dada
+    protected void getListaDatosNivel(ArrayList<T> elementosArbol, int nivel) {
+        // Caso base
+        if (nivel == 0) {
+            elementosArbol.add(dato);
+            // cuando el nivel sea 0 entonces es el nivel que buscamos
+            return; // porque ya no sirve de nada seguir bajando por el arbol si ya hemos llegado al nivel que buscamos
+        }
+
+        // Resto de casos con recursividad
+        if (nivel > 0) {
+            if (izquierda != null) {
+                izquierda.getListaDatosNivel(elementosArbol, nivel - 1);
+                // al subir un nivel en el arbol el nivel que buscamo esta un escalon mas cerca y por eso restamos 1
+                // cuando el nivel sea 0 entonces es el nivel que buscamos
+            }
+            if (derecha != null) {
+                // igual que hemos hecho con las ramas de la izquierda
+                derecha.getListaDatosNivel(elementosArbol, nivel - 1);
+            }
+        }
+    }
+
+    // Metodo que devuelve un numero en funcion de los nodos hijos que tiene
+    protected int numeroHijos() {
+        int numero = 0;
+        if (izquierda != null) {
+            numero += 1;
+        }
+        if (derecha != null) {
+            numero += 1;
+        }
+        return numero;
+    }
+
+    // Metodo que devuelve si el arbol es homogeneo o no con recursividad a traves de los nodos
+    protected boolean isArbolHomogeneo(Nodo<T> nodoActual) {
+        int hijos = nodoActual.numeroHijos();
+
+        // Caso base
+        if (hijos == 0) { // si el nodo es una hoja entonces no hay problema
+            return true;
+        }
+
+        // Resto de casos con recursividad
+        boolean ramaIzquierda = true;
+        boolean ramaDerecha = true;
+
+        if (nodoActual.izquierda != null) {
+            int hijosIzquierda = nodoActual.izquierda.numeroHijos();
+            if (hijos == hijosIzquierda || hijosIzquierda == 0) {
+                ramaIzquierda = nodoActual.izquierda.isArbolHomogeneo(nodoActual.izquierda);
+            } else {
+                ramaIzquierda = false;
+            }
+        }
+        if (nodoActual.derecha != null) {
+            int hijosDerecha = nodoActual.derecha.numeroHijos();
+            if (hijos == hijosDerecha || hijosDerecha == 0) {
+                ramaDerecha = nodoActual.derecha.isArbolHomogeneo(nodoActual.derecha);
+            } else {
+                ramaDerecha = false;
+            }
+        }
+        return (ramaIzquierda && ramaDerecha);
+    }
+
     // Metodo para añadir un nuevo elemento al arbol de manera recursiva
     protected void add(T dato) {
         if (dato.compareTo(this.dato) < 0) {

@@ -25,4 +25,41 @@ void main() {
     System.out.println(a2.getListaOrdenCentral());
     System.out.println(a2.getListaPreOrden());
     System.out.println(a3.getRaiz());
+    System.out.println(a1.getListaDatosNivel(0));
+    System.out.println(a1.getListaDatosNivel(1));
+    System.out.println(a1.getListaDatosNivel(2));
+    System.out.println(a1.getListaDatosNivel(3));
+    System.out.println(a1.getListaDatosNivel(4));
+    System.out.println(a1.isArbolHomogeneo1());
+    System.out.println(a1.isArbolHomogeneo2());
+    a1.ADD(14);
+    for (int i = 0; i < a1.getAltura(); i++) {
+        System.out.println(a1.getListaDatosNivel(i));
+    }
+    System.out.println(a1.isArbolHomogeneo1());
+    System.out.println(a1.isArbolHomogeneo2());
+
+    Nodo<Integer> n2 = new Nodo<>(8);
+
+    ArbolBinarioDeBusqueda<Integer> a4 = new ArbolBinarioDeBusqueda<>(n2);
+    a4.ADD(4);
+    a4.ADD(12);
+    a4.ADD(2);
+    a4.ADD(6);
+    a4.ADD(10);
+    a4.ADD(14);
+    a4.ADD(1);
+    a4.ADD(3);
+    a4.ADD(5);
+    a4.ADD(7);
+    a4.ADD(9);
+    a4.ADD(11);
+    a4.ADD(13);
+    a4.ADD(15);
+
+    for (int i = 0; i < a4.getAltura(); i++) {
+        System.out.println(a4.getListaDatosNivel(i));
+    }
+    System.out.println(a4.isArbolHomogeneo1());
+    System.out.println(a4.isArbolHomogeneo2());
 }

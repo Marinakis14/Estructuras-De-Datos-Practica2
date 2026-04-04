@@ -50,6 +50,80 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         }
     }
 
+    // Metodo para obtener una lista de todos los datos de un nivel dado
+    protected ArrayList<T> getListaDatosNivel(int nivel) {
+        // Creamos una lista para devolver
+        ArrayList<T> elementos = new ArrayList<>();
+
+        // Comprobamos que el nivel dado es valido
+        if (nivel > raiz.getAltura() || nivel < 0) {
+            return null;
+        } else if (nivel == 0) { // el nivel 0 del arbol es la raiz
+            elementos.add(raiz.getDato());
+            return elementos;
+        } else {
+            // Utilizamos el metodo que tenemos en la clase Nodo para añadir todos los elementos del nivel dado
+            raiz.getListaDatosNivel(elementos, nivel);
+            return elementos;
+        }
+    }
+
+    // Metodo que devuelve si el arbol es homogeneo o no con recursividad a traves de los subarboles
+    protected boolean isArbolHomogeneo1() {
+        int numeroHijos = raiz.numeroHijos();
+        // queremos ver que todos los subarboles tienen el mismo numero de hijos
+        ArbolBinarioDeBusqueda<T> arbolActual = new ArbolBinarioDeBusqueda<>(raiz);
+
+        // creamos variables para ver si los subarboles tienen el mismo numero de hijos o no
+        boolean izquierda = true;
+        boolean derecha = true;
+
+        if (numeroHijos != 0) { // si es 0 y no tiene hijos no hay problema
+            ArbolBinarioDeBusqueda<T> subarbolIzquierda = arbolActual.getSubArbolIzquierda();
+            if (subarbolIzquierda.getRaiz() != null) { // comprobar que el subarbol no este vacio
+                int HijosIzquierda = subarbolIzquierda.getRaiz().numeroHijos();
+                if (HijosIzquierda == 0) { // si es una hoja y no tiene hijos
+                    izquierda = true;
+                } else if (numeroHijos != HijosIzquierda) { // ya no es homogeneo
+                    izquierda = false;
+                } else { // si el numero de hijos coincide repetimos el proceso
+                    izquierda = subarbolIzquierda.isArbolHomogeneo1();
+                }
+            }
+
+            // lo mismo para el subarbol derecho
+            ArbolBinarioDeBusqueda<T> subarbolDerecha = arbolActual.getSubArbolDerecha();
+            if (subarbolDerecha.getRaiz() != null) { // comprobar que el subarbol no este vacio
+                int HijosDerecha = subarbolDerecha.getRaiz().numeroHijos(); // miramos cuantos hijos tiene el subarbol
+                if (HijosDerecha == 0) { // si es una hoja y no tiene hijos
+                    derecha = true;
+                } else if (numeroHijos != HijosDerecha) { // ya no es homogeneo
+                    derecha = false;
+                } else { // si el numero de hijos coincide repetimos el proceso
+                    derecha = subarbolDerecha.isArbolHomogeneo1();
+                }
+            }
+        }
+        // para que sea homogeneo ambas ramas tienen que ser "true" por lo que tenemos la estructura de una puerta and
+        return (izquierda && derecha);
+    }
+
+    // Metodo que devuelve si el arbol es homogeneo o no con recursividad a traves de los nodos
+    protected boolean isArbolHomogeneo2() {
+        // ultilizamos el metodo recursivo que tenemos en la clase Nodo
+        return raiz.isArbolHomogeneo(raiz);
+    }
+
+    // Metodo que devuelve si el arbol es completo o no
+    protected void isArbolCompleto() {
+
+    }
+
+    // Metodo que devuelve si el arbol es casi completo o no
+    protected void isArbolCasiCompleto() {
+
+    }
+
     /**
      * Operaciones que se pueden hacer sobre el arbol
      */
