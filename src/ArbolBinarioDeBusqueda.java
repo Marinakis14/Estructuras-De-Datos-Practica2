@@ -41,9 +41,27 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         }
     }
 
+    // Metodo para obtener si un nodo pertenece a un arbol o no, (se aplica a la raiz del arbol)
+    protected boolean isNodoInArbol(T dato) {
+        if (raiz == null || dato == null) { // si el arbol esta vacio el nodo no puede pertenecer al arbol
+            return false;
+        } else {
+            return raiz.isNodoInArbol(dato);
+        }
+    }
+
     // Metodo para obtener la profundidad o altura del arbol de manera recursiva
     protected int getAltura() {
         if (raiz == null) { // si el arbol estaba vacio la altura es 0
+            return 0;
+        } else {
+            return raiz.getAltura();
+        }
+    }
+
+    // Metodo para obtener el nivel de un nodo
+    protected int getNivel(Nodo<T> nodo) {
+        if (raiz == null) { // si el arbol estaba vacio el nivel es 0
             return 0;
         } else {
             return raiz.getAltura();

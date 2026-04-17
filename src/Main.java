@@ -62,4 +62,8 @@ void main() {
     }
     System.out.println(a4.isArbolHomogeneo1());
     System.out.println(a4.isArbolHomogeneo2());
+    System.out.println();
+
+    System.out.println(a4.isNodoInArbol(6));
+    System.out.println(a4.isNodoInArbol(40));
 }

@@ -96,6 +96,49 @@ public class Nodo<T extends Comparable<T>> {
         return Math.max(profundidadIzquierda, profundidadDerecha) + 1;
     }
 
+    // Metodo para obtener si un nodo pertenece a un arbol o no, (se aplica a la raiz del arbol)
+    protected boolean isNodoInArbol(T dato) {
+        // Caso 'base' = encontramos el nodo
+        if (this.getDato().equals(dato)) {
+            return true;
+        }
+
+        // Resto de casos con recursividad
+        // Buscar en subárbol izquierdo
+        if (izquierda != null && izquierda.isNodoInArbol(dato)) {
+            return true;
+        }
+
+        // Buscar en subárbol derecho
+        if (derecha != null && derecha.isNodoInArbol(dato)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Metodo para obtener el nivel de un nodo
+    protected int getNivel(T dato) {
+        // Hay que comprobar primero si el dato esta en el arbol o no
+        if (isNodoInArbol(dato)) {
+
+            // Caso base, encontramos el nodo que queremos
+            if (this.getDato().equals(dato)) {
+                return 1;
+            }
+
+            // Resto de casos con recursividad
+            if (izquierda != null && izquierda.isNodoInArbol(dato)) { // Si el nodo esta en el subarbol izquierdo nos metemos ahi
+                return izquierda.getNivel(dato) + 1;
+            }
+            if (derecha != null && derecha.isNodoInArbol(dato)) { // Si el nodo esta en el subarbol derecho nos metemos ahi
+                return derecha.getNivel(dato) + 1;
+            }
+        }
+        // Si el dato no esta en el arbol el nivel es 0
+        return 0;
+    }
+
     // Metodo para añadir todos los elementos de un cierto nivel del arbol a una lista dada
     protected void getListaDatosNivel(ArrayList<T> elementosArbol, int nivel) {
         // Caso base
