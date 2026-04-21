@@ -1,3 +1,5 @@
+package Hoja2a.arbolesbinarios;
+
 import java.util.ArrayList;
 
 public class Nodo<T extends Comparable<T>> {
