@@ -5,23 +5,27 @@ public class Nodo<T extends Comparable<T>> {
     // variables privadas de la clase
     private Nodo<T> izquierda;
     private Nodo<T> derecha;
-    private T dato;
+    private ArrayList<T> datos;
+    // Vamos a utilizar una lista de datos en vez de un dato unico para poder almacenar varias veces el mismo dato
+    // asi por ejemplo si introducimos un mismo elemento varias veces podemos saber cuantas veces lo hemos metido
 
     // Constructor
     Nodo() {  // el primer nodo estera vacio (nodo raiz)
-        izquierda = null;
-        derecha = null;
-        dato = null;
+        this.izquierda = null;
+        this.derecha = null;
+        this.datos = new ArrayList<>(); // creamos una lista vacia
     }
 
     Nodo(Nodo<T> izquierda, Nodo<T> derecha, T dato) { // constructor dados todos los parametros
         this.izquierda = izquierda;
         this.derecha = derecha;
-        this.dato = dato;
+        this.datos = new ArrayList<>();
+        this.datos.add(dato);
     }
 
     Nodo(T dato) { // constructor dados solo el dato del nodo (para los "nodos hoja" del arbol)
-        this.dato = dato;
+        this.datos = new ArrayList<>();
+        this.datos.add(dato);
     }
 
     // Metodos
@@ -36,23 +40,8 @@ public class Nodo<T extends Comparable<T>> {
     }
 
     // Getter para el nodo dato
-    protected T getDato() {
-        return dato;
-    }
-
-    // Setter para el nodo izquierda
-    protected void setIzquierda(Nodo<T> izquierda) {
-        this.izquierda = izquierda;
-    }
-
-    // Setter para el nodo derecha
-    protected void setDerecha(Nodo<T> derecha) {
-        this.derecha = derecha;
-    }
-
-    // Setter para el nodo dato
-    protected void setDato(T dato) {
-        this.dato = dato;
+    protected ArrayList<T> getDatos() {
+        return datos;
     }
 
     // Metodo para obtener el grado del arbol de manera recursiva
@@ -99,7 +88,7 @@ public class Nodo<T extends Comparable<T>> {
     // Metodo para obtener si un nodo pertenece a un arbol o no, (se aplica a la raiz del arbol)
     protected boolean isNodoInArbol(T dato) {
         // Caso 'base' = encontramos el nodo
-        if (this.getDato().equals(dato)) {
+        if (this.getDatos().get(0).equals(dato)) { // lo comparamos con un elemento de la lista
             return true;
         }
 
@@ -123,7 +112,7 @@ public class Nodo<T extends Comparable<T>> {
         if (isNodoInArbol(dato)) {
 
             // Caso base, encontramos el nodo que queremos
-            if (this.getDato().equals(dato)) {
+            if (this.getDatos().get(0).equals(dato)) {
                 return 1;
             }
 
@@ -135,15 +124,15 @@ public class Nodo<T extends Comparable<T>> {
                 return derecha.getNivel(dato) + 1;
             }
         }
-        // Si el dato no esta en el arbol el nivel es 0
-        return 0;
+        // Si el dato no esta en el arbol devolveremos -1
+        return -1;
     }
 
     // Metodo para añadir todos los elementos de un cierto nivel del arbol a una lista dada
-    protected void getListaDatosNivel(ArrayList<T> elementosArbol, int nivel) {
+    protected void getListaDatosNivel(ArrayList<ArrayList<T>> elementosArbol, int nivel) {
         // Caso base
         if (nivel == 0) {
-            elementosArbol.add(dato);
+            elementosArbol.add(datos);
             // cuando el nivel sea 0 entonces es el nivel que buscamos
             return; // porque ya no sirve de nada seguir bajando por el arbol si ya hemos llegado al nivel que buscamos
         }
@@ -207,39 +196,40 @@ public class Nodo<T extends Comparable<T>> {
     }
 
     // Metodo para añadir un nuevo elemento al arbol de manera recursiva
-    protected void add(T dato) {
-        if (dato.compareTo(this.dato) < 0) {
+    protected void ADD(T dato) {
+        if (dato.compareTo(this.datos.get(0)) < 0) { // Lo comparamos con el primer elemento de la lista de datos porque son todos iguales
             if (izquierda == null) {
                 Nodo<T> nuevoNodo = new Nodo<>(dato);
                 izquierda = nuevoNodo;
                 return;
             }
-            izquierda.add(dato);
-        } else if (dato.compareTo(this.dato) > 0) {
+            izquierda.ADD(dato);
+        } else if (dato.compareTo(this.datos.get(0)) > 0) { // Lo comparamos con el primer elemento de la lista de datos porque son todos iguales
             if (derecha == null) {
                 Nodo<T> nuevoNodo = new Nodo<>(dato);
                 derecha = nuevoNodo;
                 return;
             }
-            derecha.add(dato);
+            derecha.ADD(dato);
+        } else if (dato.compareTo(this.datos.get(0)) == 0) { // Si el dato es igual a un dato actual lo metemos en la lista de ese nodo
+            this.datos.add(dato);
         }
-        // si el dato es igual que un dato ya existente en el arbol no hace falta añadirlo
     }
 
     // Metodo para obtener los elementos con orden central
-    protected void ordenCentral(ArrayList<T> elementosArbol) {
+    protected void ordenCentral(ArrayList<ArrayList<T>> elementosArbol) {
         if (izquierda != null) {
             izquierda.ordenCentral(elementosArbol);
         }
-        elementosArbol.add(dato);
+        elementosArbol.add(datos);
         if (derecha != null) {
             derecha.ordenCentral(elementosArbol);
         }
     }
 
     // Metodo para obtener los elementos con preorden
-    protected void preOrden(ArrayList<T> elementosArbol) {
-        elementosArbol.add(dato);
+    protected void preOrden(ArrayList<ArrayList<T>> elementosArbol) {
+        elementosArbol.add(datos);
         if (izquierda != null) {
             izquierda.preOrden(elementosArbol);
         }
@@ -249,14 +239,14 @@ public class Nodo<T extends Comparable<T>> {
     }
 
     // Metodo para obtener los elementos con postorden
-    protected void postOrden(ArrayList<T> elementosArbol) {
+    protected void postOrden(ArrayList<ArrayList<T>> elementosArbol) {
         if (izquierda != null) {
             izquierda.postOrden(elementosArbol);
         }
         if (derecha != null) {
             derecha.postOrden(elementosArbol);
         }
-        elementosArbol.add(dato);
+        elementosArbol.add(datos);
     }
 
     /**
@@ -264,13 +254,13 @@ public class Nodo<T extends Comparable<T>> {
      */
     public String toString() {
         if (izquierda != null && derecha != null) {
-            return "(TIENE IZQUIERDA) <- (NODO= " + dato + " ) -> (TIENE DERECHA)";
+            return "(TIENE IZQUIERDA) <- (NODO= " + datos + " ) -> (TIENE DERECHA)";
         } else if (izquierda != null && derecha == null) {
-            return "(TIENE IZQUIERDA) <- (NODO= " + dato + " ) -/->";
+            return "(TIENE IZQUIERDA) <- (NODO= " + datos + " ) -/->";
         } else if (izquierda == null && derecha != null) {
-            return "<-/- (NODO= " + dato + " ) -> (TIENE DERECHA)";
+            return "<-/- (NODO= " + datos + " ) -> (TIENE DERECHA)";
         } else {
-            return "<-/- (NODO= " + dato + " ) -/->";
+            return "<-/- (NODO= " + datos + " ) -/->";
         }
     }
 }

@@ -53,31 +53,31 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     // Metodo para obtener la profundidad o altura del arbol de manera recursiva
     protected int getAltura() {
         if (raiz == null) { // si el arbol estaba vacio la altura es 0
-            return 0;
+            return -1;
         } else {
             return raiz.getAltura();
         }
     }
 
     // Metodo para obtener el nivel de un nodo
-    protected int getNivel(Nodo<T> nodo) {
+    protected int getNivel(T dato) {
         if (raiz == null) { // si el arbol estaba vacio el nivel es 0
-            return 0;
+            return -1;
         } else {
-            return raiz.getAltura();
+            return raiz.getNivel(dato);
         }
     }
 
     // Metodo para obtener una lista de todos los datos de un nivel dado
-    protected ArrayList<T> getListaDatosNivel(int nivel) {
+    protected ArrayList<ArrayList<T>> getListaDatosNivel(int nivel) {
         // Creamos una lista para devolver
-        ArrayList<T> elementos = new ArrayList<>();
+        ArrayList<ArrayList<T>> elementos = new ArrayList<>();
 
         // Comprobamos que el nivel dado es valido
         if (nivel > raiz.getAltura() || nivel < 0) {
             return null;
         } else if (nivel == 0) { // el nivel 0 del arbol es la raiz
-            elementos.add(raiz.getDato());
+            elementos.add(raiz.getDatos());
             return elementos;
         } else {
             // Utilizamos el metodo que tenemos en la clase Nodo para añadir todos los elementos del nivel dado
@@ -151,22 +151,30 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         if (raiz == null) { // si el arbol estaba vacio se crea un nuevo arbol con el elemento dado como raiz
             ArbolBinarioDeBusqueda<T> nuevoArbol = new ArbolBinarioDeBusqueda<>(dato);
         } else { // si ya habia algun elemento lo añadimos a traves de la clase nodo
-            raiz.add(dato);
+            raiz.ADD(dato);
         }
     }
 
     // Metodo para obtener el subarbol de la parte izquierda del arbol principal
     protected ArbolBinarioDeBusqueda<T> getSubArbolIzquierda() {
-        Nodo<T> nuevaRaiz = raiz.getIzquierda();
-        ArbolBinarioDeBusqueda subArbol = new ArbolBinarioDeBusqueda(nuevaRaiz);
-        return subArbol;
+        if (raiz.getIzquierda() != null) {
+            Nodo<T> nuevaRaiz = raiz.getIzquierda();
+            ArbolBinarioDeBusqueda<T> subArbol = new ArbolBinarioDeBusqueda<>(nuevaRaiz);
+            return subArbol;
+        } else {
+            return null;
+        }
     }
 
     // Metodo para obtener el subarbol de la parte derecha del arbol principal
     protected ArbolBinarioDeBusqueda<T> getSubArbolDerecha() {
-        Nodo<T> nuevaRaiz = raiz.getDerecha();
-        ArbolBinarioDeBusqueda subArbol = new ArbolBinarioDeBusqueda(nuevaRaiz);
-        return subArbol;
+        if (raiz.getDatos() != null) {
+            Nodo<T> nuevaRaiz = raiz.getDerecha();
+            ArbolBinarioDeBusqueda<T> subArbol = new ArbolBinarioDeBusqueda<>(nuevaRaiz);
+            return subArbol;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -174,22 +182,22 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
      */
 
     // Muestra por pantalla los elementos del arbol con orden central
-    public ArrayList<T> getListaOrdenCentral() { // mostrando los elementos con orden central
-        ArrayList<T> elementosArbol = new ArrayList<>();
+    public ArrayList<ArrayList<T>> getListaOrdenCentral() { // mostrando los elementos con orden central
+        ArrayList<ArrayList<T>> elementosArbol = new ArrayList<>();
         raiz.ordenCentral(elementosArbol);
         return elementosArbol;
     }
 
     // Muestra por pantalla los elementos del arbol con preorden
-    public ArrayList<T> getListaPreOrden() { // mostrando los elementos con orden central
-        ArrayList<T> elementosArbol = new ArrayList<>();
+    public ArrayList<ArrayList<T>> getListaPreOrden() { // mostrando los elementos con orden central
+        ArrayList<ArrayList<T>> elementosArbol = new ArrayList<>();
         raiz.preOrden(elementosArbol);
         return elementosArbol;
     }
 
     // Muestra por pantalla los elementos del arbol con postorden
-    public ArrayList<T> getListaPostOrden() { // mostrando los elementos con orden central
-        ArrayList<T> elementosArbol = new ArrayList<>();
+    public ArrayList<ArrayList<T>> getListaPostOrden() { // mostrando los elementos con orden central
+        ArrayList<ArrayList<T>> elementosArbol = new ArrayList<>();
         raiz.postOrden(elementosArbol);
         return elementosArbol;
     }
