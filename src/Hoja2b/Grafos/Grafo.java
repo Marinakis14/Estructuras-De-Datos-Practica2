@@ -17,22 +17,32 @@ public class Grafo {
         aristas = new ArrayList<>();
     }
 
+    public List<Nodo> getNodos() {
+        return nodos;
+    }
+
+    public void setNodos(List<Nodo> nodos){
+        this.nodos = nodos;
+    }
+
+    public List<Arista> getAristas(){
+        return aristas;
+    }
+    public void setAristas(List<Arista> aristas){
+        this.aristas = aristas;
+    }
+
+
     // Añade un nodo al grafo si no está ya incluido
-    public void agregarNodo(Nodo nodo) {
+    public void addNodo(Nodo nodo) {
         if (!nodos.contains(nodo)) {
             nodos.add(nodo);
         }
     }
 
-    public void agregarArista(String idOrigen, String predicado, String idDestino) {
-
-        Nodo origen = new Nodo(idOrigen);
-        Nodo destino = new Nodo(idDestino);
-
-        agregarNodo(origen);
-        agregarNodo(destino);
-
-        Arista arista = new Arista(origen, predicado, destino);
+    public void addArista(Arista arista){
+        addNodo(arista.getOrigen());
+        addNodo(arista.getDestino());
         aristas.add(arista);
     }
 
