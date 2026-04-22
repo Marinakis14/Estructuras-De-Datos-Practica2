@@ -1,3 +1,5 @@
+package Hoja2a.arbolesbinarios;
+
 import java.util.ArrayList;
 
 public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
@@ -80,7 +82,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
             elementos.add(raiz.getDatos());
             return elementos;
         } else {
-            // Utilizamos el metodo que tenemos en la clase Nodo para añadir todos los elementos del nivel dado
+            // Utilizamos el metodo que tenemos en la clase Hoja2a.arbolesbinarios.Nodo para añadir todos los elementos del nivel dado
             raiz.getListaDatosNivel(elementos, nivel);
             return elementos;
         }
@@ -128,7 +130,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
 
     // Metodo que devuelve si el arbol es homogeneo o no con recursividad a traves de los nodos
     protected boolean isArbolHomogeneo2() {
-        // ultilizamos el metodo recursivo que tenemos en la clase Nodo
+        // ultilizamos el metodo recursivo que tenemos en la clase Hoja2a.arbolesbinarios.Nodo
         return raiz.isArbolHomogeneo(raiz);
     }
 
