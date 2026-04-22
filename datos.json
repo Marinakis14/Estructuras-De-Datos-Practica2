@@ -1,0 +1,30 @@
+{
+  "tipos": ["tipo", "persona", "premio", "lugar"],
+  "tripletas": [
+    {
+      "s": "persona:Albert Einstein",
+      "p": "nace_en",
+      "o": "lugar:Ulm"
+    },
+    {
+      "s": "persona:Albert Einstein",
+      "p": "premio:Nobel",
+      "o": "1921"
+    },
+    {
+      "s": "persona:Marcos Castro",
+      "p": "nace_en",
+      "o": "lugar:Varsovia"
+    },
+    {
+      "s": "persona:Ventura Pacheco",
+      "p": "nace_en",
+      "o": "lugar:Ulm"
+    },
+    {
+      "s": "persona:Antonio",
+      "p": "nace_en",
+      "o": "lugar:Villarrubia de los Caballeros"
+    }
+  ]
+}
