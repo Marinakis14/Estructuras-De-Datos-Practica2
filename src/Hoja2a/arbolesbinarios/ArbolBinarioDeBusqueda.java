@@ -1,8 +1,8 @@
 package Hoja2a.arbolesbinarios;
 
-import java.util.ArrayList;
+import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 
-public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
+public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements InterfazArbol<T> {
 
     // variables privadas de la clase
     private Nodo<T> raiz;
@@ -13,19 +13,25 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     ArbolBinarioDeBusqueda(Nodo<T> raiz) { // para crear un arbol con una raiz dada
-        this.raiz = raiz;
+        if (raiz == null) {
+            this.raiz = raiz;
+        }
     }
 
     ArbolBinarioDeBusqueda(T dato) { // para crear un arbol con un elemento dado
-        Nodo<T> nuevaRaiz = new Nodo<>(dato);
-        this.raiz = nuevaRaiz;
+        if (dato == null) {
+            Nodo<T> nuevaRaiz = new Nodo<>(dato);
+            this.raiz = nuevaRaiz;
+        }
     }
 
     // Getters y Setters para la variable raiz
+    @Override
     public Nodo<T> getRaiz() {
         return raiz;
     }
 
+    @Override
     public void setRaiz(Nodo<T> raiz) {
         this.raiz = raiz;
     }
@@ -34,8 +40,15 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
      * Todas las "preguntas" a las que puede responder el arbol
      */
 
+    // Metodo para saber si el arbol esta vacio o no
+    @Override
+    public boolean isEmpty() {
+        return raiz == null; // devuelve true si el arbol esta vacio
+    }
+
     // Metodo para obtener el grado del arbol de manera recursiva
-    protected int getGrado() {
+    @Override
+    public int getGrado() {
         if (raiz == null) { // si el arbol esta vacio el grado es 0
             return 0;
         } else {
@@ -44,7 +57,8 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     // Metodo para obtener si un nodo pertenece a un arbol o no, (se aplica a la raiz del arbol)
-    protected boolean isNodoInArbol(T dato) {
+    @Override
+    public boolean isNodoInArbol(T dato) {
         if (raiz == null || dato == null) { // si el arbol esta vacio el nodo no puede pertenecer al arbol
             return false;
         } else {
@@ -53,7 +67,8 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     // Metodo para obtener la profundidad o altura del arbol de manera recursiva
-    protected int getAltura() {
+    @Override
+    public int getAltura() {
         if (raiz == null) { // si el arbol estaba vacio la altura es 0
             return -1;
         } else {
@@ -62,8 +77,9 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     // Metodo para obtener el nivel de un nodo
-    protected int getNivel(T dato) {
-        if (raiz == null) { // si el arbol estaba vacio el nivel es 0
+    @Override
+    public int getNivel(T dato) {
+        if (raiz == null || dato == null) { // si el arbol estaba vacio el nivel es 0
             return -1;
         } else {
             return raiz.getNivel(dato);
@@ -71,15 +87,16 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     // Metodo para obtener una lista de todos los datos de un nivel dado
-    protected ArrayList<ArrayList<T>> getListaDatosNivel(int nivel) {
+    @Override
+    public ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> getListaDatosNivel(int nivel) {
         // Creamos una lista para devolver
-        ArrayList<ArrayList<T>> elementos = new ArrayList<>();
+        ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementos = new ListaSimplementeEnlazada<>();
 
         // Comprobamos que el nivel dado es valido
         if (nivel > raiz.getAltura() || nivel < 0) {
             return null;
         } else if (nivel == 0) { // el nivel 0 del arbol es la raiz
-            elementos.add(raiz.getDatos());
+            elementos.addEnd(raiz.getDatos());
             return elementos;
         } else {
             // Utilizamos el metodo que tenemos en la clase Hoja2a.arbolesbinarios.Nodo para añadir todos los elementos del nivel dado
@@ -89,7 +106,8 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     // Metodo que devuelve si el arbol es homogeneo o no con recursividad a traves de los subarboles
-    protected boolean isArbolHomogeneo1() {
+    @Override
+    public boolean isArbolHomogeneo1() {
         int numeroHijos = raiz.numeroHijos();
         // queremos ver que todos los subarboles tienen el mismo numero de hijos
         ArbolBinarioDeBusqueda<T> arbolActual = new ArbolBinarioDeBusqueda<>(raiz);
@@ -129,19 +147,63 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     // Metodo que devuelve si el arbol es homogeneo o no con recursividad a traves de los nodos
-    protected boolean isArbolHomogeneo2() {
+    @Override
+    public boolean isArbolHomogeneo2() {
         // ultilizamos el metodo recursivo que tenemos en la clase Hoja2a.arbolesbinarios.Nodo
         return raiz.isArbolHomogeneo(raiz);
     }
 
     // Metodo que devuelve si el arbol es completo o no
-    protected void isArbolCompleto() {
+    @Override
+    public void isArbolCompleto() {
 
     }
 
     // Metodo que devuelve si el arbol es casi completo o no
-    protected void isArbolCasiCompleto() {
+    @Override
+    public void isArbolCasiCompleto() {
 
+    }
+
+    // Metodo para saber si un arbol esta equilibrado o no
+    @Override
+    public boolean isEquilibrado() {
+        int alturaIzq = 0;
+        int alturaDer = 0;
+
+        // calcular altura izquierda
+        if (getSubArbolIzquierda() != null) {
+            alturaIzq = getSubArbolIzquierda().getAltura();
+        }
+
+        // calcular altura derecha
+        if (getSubArbolDerecha() != null) {
+            alturaDer = getSubArbolDerecha().getAltura();
+        }
+
+        // variable para calcular el grado de desequilibrio
+        // si desequilibrio > 1 -> esta desequilibrado
+        int desequilibrio = Math.abs(alturaIzq - alturaDer);
+
+        // Caso base
+        if (desequilibrio > 1) {
+            return false;
+        }
+        // resto de casos
+        // miramos rama de la izquierda
+        if (getSubArbolIzquierda() != null) {
+            if (!getSubArbolIzquierda().isEquilibrado()) { // si el arbol izquierdo esta desequilibrado
+                return false;
+            }
+        }
+        // miramos rama de la derecha
+        if (getSubArbolDerecha() != null) {
+            if (!getSubArbolDerecha().isEquilibrado()) { // si el arbol derecho esta desequilibrado
+                return false;
+            }
+        }
+        // si todo esta bien
+        return true;
     }
 
     /**
@@ -149,16 +211,31 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
      */
 
     // Metodo para añadir elemento al arbol
-    protected void ADD(T dato) {
-        if (raiz == null) { // si el arbol estaba vacio se crea un nuevo arbol con el elemento dado como raiz
-            ArbolBinarioDeBusqueda<T> nuevoArbol = new ArbolBinarioDeBusqueda<>(dato);
+    @Override
+    public void ADD(T dato) {
+        if (dato == null) { // si no se introduce un dato valido
+            return;
+        }
+        if (raiz == null ) { // si el arbol estaba vacio se crea un nuevo arbol con el elemento dado como raiz
+            this.raiz = new Nodo<>(dato);
         } else { // si ya habia algun elemento lo añadimos a traves de la clase nodo
             raiz.ADD(dato);
         }
     }
 
+    @Override
+    public void DEL(T dato) {
+
+    }
+
+    @Override
+    public ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> getCamino() {
+        return null;
+    }
+
     // Metodo para obtener el subarbol de la parte izquierda del arbol principal
-    protected ArbolBinarioDeBusqueda<T> getSubArbolIzquierda() {
+    @Override
+    public ArbolBinarioDeBusqueda<T> getSubArbolIzquierda() {
         if (raiz.getIzquierda() != null) {
             Nodo<T> nuevaRaiz = raiz.getIzquierda();
             ArbolBinarioDeBusqueda<T> subArbol = new ArbolBinarioDeBusqueda<>(nuevaRaiz);
@@ -169,7 +246,8 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
     }
 
     // Metodo para obtener el subarbol de la parte derecha del arbol principal
-    protected ArbolBinarioDeBusqueda<T> getSubArbolDerecha() {
+    @Override
+    public ArbolBinarioDeBusqueda<T> getSubArbolDerecha() {
         if (raiz.getDatos() != null) {
             Nodo<T> nuevaRaiz = raiz.getDerecha();
             ArbolBinarioDeBusqueda<T> subArbol = new ArbolBinarioDeBusqueda<>(nuevaRaiz);
@@ -184,22 +262,22 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
      */
 
     // Muestra por pantalla los elementos del arbol con orden central
-    public ArrayList<ArrayList<T>> getListaOrdenCentral() { // mostrando los elementos con orden central
-        ArrayList<ArrayList<T>> elementosArbol = new ArrayList<>();
+    public ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> getListaOrdenCentral() { // mostrando los elementos con orden central
+        ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementosArbol = new ListaSimplementeEnlazada<>();
         raiz.ordenCentral(elementosArbol);
         return elementosArbol;
     }
 
     // Muestra por pantalla los elementos del arbol con preorden
-    public ArrayList<ArrayList<T>> getListaPreOrden() { // mostrando los elementos con orden central
-        ArrayList<ArrayList<T>> elementosArbol = new ArrayList<>();
+    public ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> getListaPreOrden() { // mostrando los elementos con orden central
+        ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementosArbol = new ListaSimplementeEnlazada<>();
         raiz.preOrden(elementosArbol);
         return elementosArbol;
     }
 
     // Muestra por pantalla los elementos del arbol con postorden
-    public ArrayList<ArrayList<T>> getListaPostOrden() { // mostrando los elementos con orden central
-        ArrayList<ArrayList<T>> elementosArbol = new ArrayList<>();
+    public ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> getListaPostOrden() { // mostrando los elementos con orden central
+        ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementosArbol = new ListaSimplementeEnlazada<>();
         raiz.postOrden(elementosArbol);
         return elementosArbol;
     }

@@ -1,13 +1,13 @@
 package Hoja2a.arbolesbinarios;
 
-import java.util.ArrayList;
+import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 
 public class Nodo<T extends Comparable<T>> {
 
     // variables privadas de la clase
     private Nodo<T> izquierda;
     private Nodo<T> derecha;
-    private ArrayList<T> datos;
+    private ListaSimplementeEnlazada<T> datos;
     // Vamos a utilizar una lista de datos en vez de un dato unico para poder almacenar varias veces el mismo dato
     // asi por ejemplo si introducimos un mismo elemento varias veces podemos saber cuantas veces lo hemos metido
 
@@ -15,19 +15,19 @@ public class Nodo<T extends Comparable<T>> {
     Nodo() {  // el primer nodo estera vacio (nodo raiz)
         this.izquierda = null;
         this.derecha = null;
-        this.datos = new ArrayList<>(); // creamos una lista vacia
+        this.datos = new ListaSimplementeEnlazada<>(); // creamos una lista vacia
     }
 
     Nodo(Nodo<T> izquierda, Nodo<T> derecha, T dato) { // constructor dados todos los parametros
         this.izquierda = izquierda;
         this.derecha = derecha;
-        this.datos = new ArrayList<>();
-        this.datos.add(dato);
+        this.datos = new ListaSimplementeEnlazada<>();
+        this.datos.addEnd(dato);
     }
 
     Nodo(T dato) { // constructor dados solo el dato del nodo (para los "nodos hoja" del arbol)
-        this.datos = new ArrayList<>();
-        this.datos.add(dato);
+        this.datos = new ListaSimplementeEnlazada<>();
+        this.datos.addEnd(dato);
     }
 
     // Metodos
@@ -42,7 +42,7 @@ public class Nodo<T extends Comparable<T>> {
     }
 
     // Getter para el nodo dato
-    protected ArrayList<T> getDatos() {
+    protected ListaSimplementeEnlazada<T> getDatos() {
         return datos;
     }
 
@@ -90,51 +90,49 @@ public class Nodo<T extends Comparable<T>> {
     // Metodo para obtener si un nodo pertenece a un arbol o no, (se aplica a la raiz del arbol)
     protected boolean isNodoInArbol(T dato) {
         // Caso 'base' = encontramos el nodo
-        if (this.getDatos().get(0).equals(dato)) { // lo comparamos con un elemento de la lista
+        if (this.datos.get(0).equals(dato)) { // lo comparamos con un elemento de la lista
             return true;
         }
 
         // Resto de casos con recursividad
         // Buscar en subárbol izquierdo
-        if (izquierda != null && izquierda.isNodoInArbol(dato)) {
-            return true;
+        if (dato.compareTo(this.datos.get(0)) < 0 && izquierda != null) {
+            izquierda.isNodoInArbol(dato);
         }
 
         // Buscar en subárbol derecho
-        if (derecha != null && derecha.isNodoInArbol(dato)) {
-            return true;
+        if (dato.compareTo(this.datos.get(0)) < 0 && derecha != null) {
+            derecha.isNodoInArbol(dato);
         }
 
+        // Si no encontramos el nodo
         return false;
     }
 
     // Metodo para obtener el nivel de un nodo
     protected int getNivel(T dato) {
-        // Hay que comprobar primero si el dato esta en el arbol o no
-        if (isNodoInArbol(dato)) {
+        // Caso base, encontramos el nodo que queremos
+        if (this.datos.get(0).equals(dato)) {
+            return 0; // La raiz tiene nivel 0
+        }
 
-            // Caso base, encontramos el nodo que queremos
-            if (this.getDatos().get(0).equals(dato)) {
-                return 1;
-            }
-
-            // Resto de casos con recursividad
-            if (izquierda != null && izquierda.isNodoInArbol(dato)) { // Si el nodo esta en el subarbol izquierdo nos metemos ahi
-                return izquierda.getNivel(dato) + 1;
-            }
-            if (derecha != null && derecha.isNodoInArbol(dato)) { // Si el nodo esta en el subarbol derecho nos metemos ahi
-                return derecha.getNivel(dato) + 1;
-            }
+        // Resto de casos con recursividad
+        if (dato.compareTo(this.datos.get(0)) < 0 && izquierda != null) { // Si el nodo esta a la izquierda nos metemos ahi
+            int nivelIzquierda = izquierda.getNivel(dato);
+            if (nivelIzquierda != -1) return nivelIzquierda + 1;
+        } else if (dato.compareTo(this.datos.get(0)) > 0 && derecha != null) { // Si el nodo esta a la derecha nos metemos ahi
+            int nivelDerecha = derecha.getNivel(dato);
+            if (nivelDerecha != -1) return nivelDerecha + 1;
         }
         // Si el dato no esta en el arbol devolveremos -1
         return -1;
     }
 
     // Metodo para añadir todos los elementos de un cierto nivel del arbol a una lista dada
-    protected void getListaDatosNivel(ArrayList<ArrayList<T>> elementosArbol, int nivel) {
+    protected void getListaDatosNivel(ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementosArbol, int nivel) {
         // Caso base
         if (nivel == 0) {
-            elementosArbol.add(datos);
+            elementosArbol.addEnd(datos);
             // cuando el nivel sea 0 entonces es el nivel que buscamos
             return; // porque ya no sirve de nada seguir bajando por el arbol si ya hemos llegado al nivel que buscamos
         }
@@ -197,6 +195,20 @@ public class Nodo<T extends Comparable<T>> {
         return (ramaIzquierda && ramaDerecha);
     }
 
+    // Metodo para saber si un arbol esta equilibrado o no
+    protected void equilibrar() {
+        // Bajamos hasta las hojas del arbol
+        if (izquierda != null) {
+            izquierda.equilibrar();
+        }
+        if (derecha != null) {
+            derecha.equilibrar();
+        }
+        // Y ahora subimos de abajo a arriba comprobando si el arbol esta equilibrado o no
+
+    }
+
+
     // Metodo para añadir un nuevo elemento al arbol de manera recursiva
     protected void ADD(T dato) {
         if (dato.compareTo(this.datos.get(0)) < 0) { // Lo comparamos con el primer elemento de la lista de datos porque son todos iguales
@@ -214,24 +226,24 @@ public class Nodo<T extends Comparable<T>> {
             }
             derecha.ADD(dato);
         } else if (dato.compareTo(this.datos.get(0)) == 0) { // Si el dato es igual a un dato actual lo metemos en la lista de ese nodo
-            this.datos.add(dato);
+            this.datos.addEnd(dato);
         }
     }
 
     // Metodo para obtener los elementos con orden central
-    protected void ordenCentral(ArrayList<ArrayList<T>> elementosArbol) {
+    protected void ordenCentral(ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementosArbol) {
         if (izquierda != null) {
             izquierda.ordenCentral(elementosArbol);
         }
-        elementosArbol.add(datos);
+        elementosArbol.addEnd(datos);
         if (derecha != null) {
             derecha.ordenCentral(elementosArbol);
         }
     }
 
     // Metodo para obtener los elementos con preorden
-    protected void preOrden(ArrayList<ArrayList<T>> elementosArbol) {
-        elementosArbol.add(datos);
+    protected void preOrden(ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementosArbol) {
+        elementosArbol.addEnd(datos);
         if (izquierda != null) {
             izquierda.preOrden(elementosArbol);
         }
@@ -241,14 +253,73 @@ public class Nodo<T extends Comparable<T>> {
     }
 
     // Metodo para obtener los elementos con postorden
-    protected void postOrden(ArrayList<ArrayList<T>> elementosArbol) {
+    protected void postOrden(ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementosArbol) {
         if (izquierda != null) {
             izquierda.postOrden(elementosArbol);
         }
         if (derecha != null) {
             derecha.postOrden(elementosArbol);
         }
-        elementosArbol.add(datos);
+        elementosArbol.addEnd(datos);
+    }
+
+    /**
+     * Rotaciones para equilibrar los árboles
+     */
+    protected void rotacionHaciaIzquierda(Nodo<T> nodo) {
+        // Tenemos un hilo de tres nodos seguidos hacia la derecha y tenemos que rotarlos hacia la izquierda
+        // Comprobamos que el nodo es valido
+        if (nodo != null && nodo.derecha != null && nodo.derecha.derecha != null) {
+            // Realizamos el giro
+            Nodo<T> nodoActual = nodo;
+            // El nodo del medio pasa a la posicion del nodo actual
+            nodo = nodo.derecha;
+            // Los demas se colocan como hijos
+            nodo.derecha.izquierda = nodoActual;
+            // El otro ya esta a la derecha asi que se queda igual
+        }
+    }
+
+    protected void rotacionHaciaDerecha(Nodo<T> nodo) {
+        // Tenemos un hilo de tres nodos seguidos hacia la izquierda y tenemos que rotarlos hacia la derecha
+        // Comprobamos que el nodo es valido
+        if (nodo != null && nodo.izquierda != null && nodo.izquierda.izquierda != null) {
+            // Realizamos el giro
+            Nodo<T> nodoActual = nodo;
+            // El nodo del medio pasa a la posicion del nodo actual
+            nodo = nodo.izquierda;
+            // Los demas se colocan como hijos
+            nodo.izquierda.derecha = nodoActual;
+            // El otro ya esta a la izquierda asi que se queda igual
+        }
+    }
+
+    protected void ajusteHaciaIzquierda(Nodo<T> nodo) {
+        // Tenemos un hilo de tres nodos en zig-zag izquierda-derecha-izquierda
+        // Comprobamos que el nodo es valido
+        if (nodo != null && nodo.derecha != null && nodo.derecha.izquierda != null) {
+            // Realizamos una modificacion para llegar a uno de los casos anteriores
+            Nodo<T> nodoDerecha = nodo.derecha;
+            nodo.derecha = nodo.derecha.izquierda;
+            // colocamos el nodo que hemos cambiado como hijo
+            nodo.derecha.derecha = nodoDerecha;
+            // Ahora usamos el caso anterior
+            rotacionHaciaIzquierda(nodo);
+        }
+    }
+
+    protected void ajusteHaciaDerecha(Nodo<T> nodo) {
+        // Tenemos un hilo de tres nodos en zig-zag dercha-izquierda-derecha
+        // Comprobamos que el nodo es valido
+        if (nodo != null && nodo.izquierda != null && nodo.izquierda.derecha != null) {
+            // Realizamos una modificacion para llegar a uno de los casos anteriores
+            Nodo<T> nodoIzquierda = nodo.izquierda;
+            nodo.izquierda = nodo.izquierda.derecha;
+            // colocamos el nodo que hemos cambiado como hijo
+            nodo.izquierda.izquierda = nodoIzquierda;
+            // Ahora usamos el caso anterior
+            rotacionHaciaDerecha(nodo);
+        }
     }
 
     /**
