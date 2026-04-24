@@ -11,8 +11,8 @@ public class Arista {
         this.destino = destino;
     }
 
-    public String getOrigen(){
-        return origen.getId();
+    public Nodo getOrigen(){
+        return origen;
     }
     public void setOrigen(Nodo origen){
         this.origen = origen;
@@ -23,8 +23,8 @@ public class Arista {
     public void setPredicado(String predicado){
         this.predicado = predicado;
     }
-    public String getDestino(){
-        return destino.getId();
+    public Nodo getDestino(){
+        return destino;
     }
     public void setDestino(Nodo destino){
         this.destino = destino;

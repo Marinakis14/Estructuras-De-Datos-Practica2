@@ -1,0 +1,20 @@
+{
+  "tipos": ["tipo", "persona", "lugar", "pais"],
+  "tripletas": [
+    {
+      "s": "persona:Albert Einstein",
+      "p": "nace_en",
+      "o": "lugar:Ulm"
+    },
+    {
+      "s": "persona:Antonio",
+      "p": "nace_en",
+      "o": "lugar:Ulm"
+    },
+    {
+      "s": "lugar:Ulm",
+      "p": "esta_en",
+      "o": "pais:Alemania"
+    }
+  ]
+}

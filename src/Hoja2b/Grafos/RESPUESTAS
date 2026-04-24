@@ -1,0 +1,48 @@
+¿Qué tipos de nodos tiene el grafo?
+
+Los tipos de nodos que tiene el grafo son principalmente **persona**, **lugar** y **premio**
+, porque son las entidades básicas con las que se representa la información del problema.
+Cada nodo representa una entidad concreta del dominio, por ejemplo una persona como **Albert Einstein**,
+ un lugar como **Ulm** o un premio como **Nobel**.
+
+Además, dependiendo de los datos que se carguen en el archivo JSON,
+también pueden aparecer otros nodos que no sean exactamente de esos tres tipos principales,
+como por ejemplo **años** o valores concretos asociados a alguna relación, como **1921**.
+Por tanto, el grafo no solo almacena personas y lugares, sino cualquier elemento que sea necesario para describir correctamente la información de las tripletas.
+
+¿Qué es una ontología?
+
+Una ontología es un modelo que describe de forma organizada los elementos que existen en un dominio y cómo se relacionan entre ellos.
+Su objetivo es definir con claridad qué tipos de entidades hay, qué propiedades tienen y qué relaciones son posibles entre ellas.
+En nuestro caso, una ontología serviría para describir formalmente conceptos como **persona**,
+**lugar** o **premio**, y también relaciones como **nace_en** o **premio:Nobel**.
+De esta forma, no solo se guardan datos, sino que también se establece el significado de esos datos y la forma correcta de relacionarlos.
+
+¿Qué relación tiene con los grafos?
+
+La relación entre ontología y grafos es muy directa, porque ambos se utilizan para representar conocimiento,
+aunque no hacen exactamente lo mismo. El **grafo** se encarga de representar la información concreta mediante nodos y conexiones entre ellos.
+Por ejemplo, en el grafo se puede representar que **Albert Einstein** está unido con **Ulm** mediante la relación **nace_en**.
+
+La ontología, en cambio, define el significado de esa información. Es decir, permite indicar que **Albert Einstein** es una **persona**,
+que **Ulm** es un **lugar** y que la relación **nace_en** conecta correctamente una persona con un lugar. Por tanto, el grafo representa
+los datos y la ontología aporta la parte conceptual y semántica que da sentido a esos datos.
+
+¿Podríamos crear una ontología para nuestro problema?
+
+Sí, se podría crear una ontología para este problema, y además sería útil hacerlo.
+Ya existe una base bastante clara, porque aparecen tipos de nodos como **persona**, **lugar** y **premio**,
+y también relaciones bien definidas como **nace_en**. Eso significa que ya hay una estructura del dominio
+sobre la que se puede construir una ontología.
+Lo que habría que hacer sería formalizar esa estructura, es decir, definir de manera más precisa qué tipos de entidades existen
+y qué relaciones son válidas entre ellas. Por ejemplo, se podría establecer que una relación como **nace_en** debe ir de una persona a un lugar,
+o que una relación relacionada con un Nobel debe partir de una persona. Así, el modelo quedaría mucho más claro y consistente.
+
+¿Qué haríamos con ella?
+
+La ontología serviría para organizar mejor el grafo y darle una estructura más coherente.
+Gracias a ella, se podrían validar mejor los datos, evitar errores y asegurar que las relaciones que se añaden al grafo tengan sentido.
+También facilitaría mucho las consultas, porque al estar los tipos y las relaciones mejor definidos, sería más sencillo acceder a la información correcta.
+Además, una ontología ayudaría a ampliar el sistema en el futuro, ya que permitiría añadir nuevos tipos de nodos o
+nuevas relaciones sin perder el orden. En resumen, haría que el grafo no fuese solo un conjunto de datos conectados,
+sino un sistema de conocimiento más claro, más estructurado y con un significado mejor definido.
