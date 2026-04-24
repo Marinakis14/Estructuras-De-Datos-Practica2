@@ -1,4 +1,4 @@
-## ¿Qué tipos de nodos tiene el grafo?
+¿Qué tipos de nodos tiene el grafo?
 
 Los tipos de nodos que tiene el grafo son principalmente **persona**, **lugar** y **premio**
 , porque son las entidades básicas con las que se representa la información del problema.
