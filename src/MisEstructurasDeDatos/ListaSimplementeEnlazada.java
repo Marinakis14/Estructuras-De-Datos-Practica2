@@ -189,6 +189,21 @@ public class ListaSimplementeEnlazada<T extends Comparable<T>> implements Interf
         return null;
     }
 
+    // Metodo para sacar un nodo
+    public NodoListaSE<T> getNodo(int posicion) {
+        // comprobar que la posicion dada es valida
+        if (posicion < 0) return null;
+        if (posicion >= tamaño) return null;
+
+        // llegamos hasta la posicion de la lista
+        NodoListaSE<T> actual = primero;
+        for (int i = 0; i < posicion; i++) {
+            actual = actual.getSiguiente();
+        }
+        // ahora que ya hemos llegado devolvemos el elemento de esa posicion
+        return actual;
+    }
+
     // Metodo para buscar un elemento que se encuentra en una posicione especifica de la lista
     @Override
     public T get(int posicion) {
@@ -244,7 +259,7 @@ public class ListaSimplementeEnlazada<T extends Comparable<T>> implements Interf
         while (actual != null) { // para ir añadiendo los elementos de la lista a la cadena
             lista += actual.getDato();
             if (actual.getSiguiente() != null) {
-                lista += " -> ";
+                lista += ", ";
             }
             actual = actual.getSiguiente();
         }

@@ -2,7 +2,7 @@ package Hoja2a.arbolesbinarios;
 
 import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 
-public class Nodo<T extends Comparable<T>> {
+public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
 
     // variables privadas de la clase
     private Nodo<T> izquierda;
@@ -44,6 +44,23 @@ public class Nodo<T extends Comparable<T>> {
     // Getter para el nodo dato
     protected ListaSimplementeEnlazada<T> getDatos() {
         return datos;
+    }
+
+    // Metodo que devuelve cuantas veces se ha introducido un mismo dato dado el dato
+    protected int getRepeticionesNodo(T dato) {
+        // Caso base -> encontramos el nodo
+        if (datos.get(0).compareTo(dato) == 0) {
+            return datos.getSize();
+        }
+        // Resto de casos con recursividad
+        if (datos.get(0).compareTo(dato) > 0 && izquierda != null) {
+            return izquierda.getRepeticionesNodo(dato);
+        }
+        if (datos.get(0).compareTo(dato) < 0 && derecha != null) {
+            return derecha.getRepeticionesNodo(dato);
+        }
+        // Si el dato no esta en el arbol
+        return 0;
     }
 
     // Metodo para obtener el grado del arbol de manera recursiva
@@ -90,19 +107,19 @@ public class Nodo<T extends Comparable<T>> {
     // Metodo para obtener si un nodo pertenece a un arbol o no, (se aplica a la raiz del arbol)
     protected boolean isNodoInArbol(T dato) {
         // Caso 'base' = encontramos el nodo
-        if (this.datos.get(0).equals(dato)) { // lo comparamos con un elemento de la lista
+        if (datos.get(0).equals(dato)) { // lo comparamos con un elemento de la lista
             return true;
         }
 
         // Resto de casos con recursividad
         // Buscar en subárbol izquierdo
         if (dato.compareTo(this.datos.get(0)) < 0 && izquierda != null) {
-            izquierda.isNodoInArbol(dato);
+            return izquierda.isNodoInArbol(dato);
         }
 
         // Buscar en subárbol derecho
-        if (dato.compareTo(this.datos.get(0)) < 0 && derecha != null) {
-            derecha.isNodoInArbol(dato);
+        if (dato.compareTo(this.datos.get(0)) > 0 && derecha != null) {
+            return derecha.isNodoInArbol(dato);
         }
 
         // Si no encontramos el nodo
@@ -151,6 +168,29 @@ public class Nodo<T extends Comparable<T>> {
         }
     }
 
+    // Metodo para añadir todos los nodos de un cierto nivel del arbol a una lista dada
+    protected void getListaNodosNivel(ListaSimplementeEnlazada<Nodo<T>> elementosArbol, int nivel) {
+        // Caso base
+        if (nivel == 0) {
+            elementosArbol.addEnd(this);
+            // cuando el nivel sea 0 entonces es el nivel que buscamos
+            return; // porque ya no sirve de nada seguir bajando por el arbol si ya hemos llegado al nivel que buscamos
+        }
+
+        // Resto de casos con recursividad
+        if (nivel > 0) {
+            if (izquierda != null) {
+                izquierda.getListaNodosNivel(elementosArbol, nivel - 1);
+                // al subir un nivel en el arbol el nivel que buscamo esta un escalon mas cerca y por eso restamos 1
+                // cuando el nivel sea 0 entonces es el nivel que buscamos
+            }
+            if (derecha != null) {
+                // igual que hemos hecho con las ramas de la izquierda
+                derecha.getListaNodosNivel(elementosArbol, nivel - 1);
+            }
+        }
+    }
+
     // Metodo que devuelve un numero en funcion de los nodos hijos que tiene
     protected int numeroHijos() {
         int numero = 0;
@@ -161,6 +201,105 @@ public class Nodo<T extends Comparable<T>> {
             numero += 1;
         }
         return numero;
+    }
+
+    // Metodo que devuelve una lista de los nodos hoja de un subarbol a partir de un determinado nodo
+    protected void getNodosHoja(ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> hijos) {
+        // Caso base -> llegamos a un nodo hoja -> lo añadimos a la lista
+        if (izquierda == null && derecha == null) {
+            hijos.addEnd(this.datos);
+        }
+
+        // Resto de casos con recursividad
+        if (izquierda != null) {
+            izquierda.getNodosHoja(hijos);
+        }
+
+        if (derecha != null) {
+            derecha.getNodosHoja(hijos);
+        }
+    }
+
+    // Metodo que devuelve el nodo mas pequeño de un arbol
+    protected Nodo<T> getNodoMasPequeño() {
+        // Si hay izquierda nos metemos a la izquierda
+        if (izquierda != null) {
+            return izquierda.getNodoMasPequeño();
+        }
+        // Cuando ya no nos podamos meter mas estamos en el dato mas pequeño
+        return this;
+    }
+
+    // Metodo que devuelve el nodo mas grande de un arbol
+    protected Nodo<T> getNodoMasGrande() {
+        // Si hay izquierda nos metemos a la izquierda
+        if (derecha != null) {
+            return derecha.getNodoMasGrande();
+        }
+        // Cuando ya no nos podamos meter mas estamos en el dato mas grande
+        return this;
+    }
+
+    // Metodo para comprobar que todas las hojas coinciden con un nivel de referencia
+    protected boolean isArbolCompleto(int nivelActual, int nivelReferencia) {
+        // Empezamos como si el arbol fuera completo
+        boolean ramaIzquierda = true;
+        boolean ramaDerecha = true;
+
+        // Caso base -> llegamos a una hoja -> comprobamos que el nivel es igual al de referencia
+        if (izquierda == null && derecha == null) {
+            return nivelActual == nivelReferencia;
+        }
+        // Resto de casos con recursividad
+        // Si hay alguna rama que tiene solo izquierda o solo derecha el arbol no puede ser completo
+        if (izquierda == null || derecha == null) {
+            return false;
+        }
+        // Si existen ambas ramas comprobamos que ambas cumplen las condiciones
+        // Rama izquierda
+        ramaIzquierda = izquierda.isArbolCompleto(nivelActual + 1, nivelReferencia); // Como bajamos un nivel: nivelActual + 1
+        // Rama derecha
+        ramaDerecha = derecha.isArbolCompleto(nivelActual + 1, nivelReferencia); // Como bajamos un nivel: nivelActual + 1
+
+        // Para que sea completo ambas ramas deben de ser true
+        return (ramaIzquierda && ramaDerecha);
+    }
+
+    // Metodo para comprobar que las hojas mas a la izquierda coinciden con un nivel de referencia
+    // Y a partir de una cierta hoja todas tienen un nivel menos
+    protected boolean isArbolCasiCompleto(int nivelActual, int nivelReferencia) {
+        // Empezamos como si el arbol fuera casi completo
+        boolean ramaIzquierda = true;
+        boolean ramaDerecha = true;
+        // Va a haber dos fases, una para comprobar que el nivel es igual al nivel de Referencia
+        // y otra fase para ver que es un nivel menos
+        int fase = 1;
+
+        // Caso base -> llegamos a una hoja -> comprobamos que el nivel es igual al de referencia
+        if (izquierda == null && derecha == null && fase == 1) {
+            return nivelActual == nivelReferencia;
+        }
+        // Segundo caso base -> llegamos a una hoja -> comprobamos que el nivel es uno menos que el de referencia
+        if (izquierda == null && derecha == null && fase == 2) {
+            return nivelActual == nivelReferencia - 1;
+        }
+
+        // Resto de casos con recursividad
+        // Si hay rama izquierda nos metemos a la izquierda
+        if (izquierda != null) {
+            ramaIzquierda = izquierda.isArbolCompleto(nivelActual + 1, nivelReferencia); // Como bajamos un nivel: nivelActual + 1
+        }
+        // Si hay rama derecha nos metemos a la derecha
+        if (derecha != null) {
+            ramaDerecha = derecha.isArbolCompleto(nivelActual + 1, nivelReferencia); // Como bajamos un nivel: nivelActual + 1
+        }
+        // Si hay alguna rama que tiene solo izquierda o solo derecha pasamos a la segunda fase
+        if (izquierda == null || derecha == null) {
+            fase = 2;
+        }
+
+        // Para que sea completo ambas ramas deben de ser true
+        return (ramaIzquierda && ramaDerecha);
     }
 
     // Metodo que devuelve si el arbol es homogeneo o no con recursividad a traves de los nodos
@@ -228,6 +367,128 @@ public class Nodo<T extends Comparable<T>> {
         } else if (dato.compareTo(this.datos.get(0)) == 0) { // Si el dato es igual a un dato actual lo metemos en la lista de ese nodo
             this.datos.addEnd(dato);
         }
+    }
+
+    // Metodo para añadir un nuevo nodo al arbol de manera recursiva
+    protected void ADD(Nodo<T> nodo) {
+        if (nodo.getDatos().get(0).compareTo(this.datos.get(0)) < 0) {
+            if (izquierda == null) {
+                izquierda = nodo;
+                return;
+            }
+            izquierda.ADD(nodo);
+        } else if (nodo.getDatos().get(0).compareTo(this.datos.get(0)) > 0) {
+            if (derecha == null) {
+                derecha = nodo;
+                return;
+            }
+            derecha.ADD(nodo);
+        } else if (nodo.getDatos().get(0).compareTo(this.datos.get(0)) == 0) { // Si el nodo es igual a un nodo actual los "juntamos"
+            for (int i = 0; i < nodo.getDatos().getSize(); i++) {
+                this.datos.addEnd(nodo.getDatos().get(0));
+            }
+        }
+    }
+
+    // Metodo para borrar un elemento del arbol
+    protected Nodo<T> DEL(T dato) {
+        // Caso base -> encontramos el nodo -> lo eliminamos
+        if (dato.compareTo(this.datos.get(0)) == 0) {
+            // Miramos cuantos "elementos del mismo dato" hay
+            if (this.datos.getSize() > 1) { // Solo hay que quitar un elemento de la lista
+                this.datos.delFirst();
+                return this;
+            } else { // Si solo hay un elemento y hay que borrar el nodo entero
+                return ProcesoBorrado();
+            }
+        }
+        // Resto de casos con recursividad
+        else if (datos.get(0).compareTo(dato) > 0 && izquierda != null) {
+            izquierda = izquierda.DEL(dato);
+        }
+        else if (datos.get(0).compareTo(dato) < 0 && derecha != null) {
+            derecha = derecha.DEL(dato);
+        }
+        // Si no encontramos el dato a borrar se queda igual
+        return this;
+    }
+
+    // Metodo auxiliar para borrar un elemento de un arbol
+    protected Nodo<T> ProcesoBorrado() {
+        // Si es un nodo hoja, solo hay que decirle al padre que su hijo ahora es null
+        if (izquierda == null && derecha == null) {
+            return null; // El dato ahora es null
+        }
+        // Si no se da esto
+        // miramos si tiene izquierda para sustituirlo
+        if (derecha != null) {
+            if (izquierda != null) {
+                // Si habia mas nodos a la derecha lo que hacemos es buscar el elemento mas pequeño de la rama derecha
+                // Y subirlo a donde estaba nuestro dato
+                Nodo<T> nodoMasGrande = derecha.getNodoMasPequeño();
+                // Cambiamos los datos de este nodo por el nodo que queremos borrar
+                this.datos = nodoMasGrande.datos;
+                // Borramos el nodo que hemos cambiado de su posicion anterior
+                this.derecha = derecha.DEL(nodoMasGrande.datos.get(0));
+                // Una vez que hemos hecho todos los cambios devolvemos la rama
+                return this;
+            }
+            // Conectamos al padre directamente con el hijo de la izquierda
+            return derecha;
+        }
+        // Si no hay izquierda lo hacemos con la derecha
+        else {
+            // Conectamos al padre directamente con el hijo de la derecha
+            return izquierda;
+        }
+    }
+
+    // Metodo para añadir a una lista la sucesion de datos que hay que recorrer hasta llegar a un dato dado
+    protected boolean getCaminoDatos(ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> camino, T dato) {
+        // Creamos una variable para ver si hemos encontrado el dato o no
+        boolean encontrado = false;
+
+        // Caso base -> encontramos el dato
+        if (this.datos.get(0).compareTo(dato) == 0) {
+            encontrado = true;
+        }
+        // Resto de casos con recursividad
+        else if (this.datos.get(0).compareTo(dato) > 0 && izquierda != null) {
+            encontrado = izquierda.getCaminoDatos(camino, dato);
+        }
+        else if (this.datos.get(0).compareTo(dato) < 0 && derecha != null) {
+            encontrado = derecha.getCaminoDatos(camino, dato);
+        }
+
+        // Si hemos encontrado el dato añadimos el dato a la lista
+        if (encontrado == true) {
+            camino.addEnd(this.datos);
+        }
+        return encontrado;
+    }
+
+    // Metodo para añadir a una lista la sucesion de nodos que hay que recorrer hasta llegar a un dato dado
+    protected boolean getCaminoNodos(ListaSimplementeEnlazada<Nodo<T>> camino, T dato) {
+        // Creamos una variable para ver si hemos encontrado el dato o no
+        boolean encontrado = false;
+
+        // Caso base -> encontramos el dato
+        if (this.datos.get(0).compareTo(dato) == 0) {
+            encontrado = true;
+        }
+        // Resto de casos con recursividad
+        else if (this.datos.get(0).compareTo(dato) > 0 && izquierda != null) {
+            encontrado = izquierda.getCaminoNodos(camino, dato);
+        }
+        else if (this.datos.get(0).compareTo(dato) < 0 && derecha != null) {
+            encontrado = derecha.getCaminoNodos(camino, dato);
+        }
+
+        // Si hemos encontrado el dato añadimos el nodo a la lista
+        if (encontrado == true) {
+            camino.addEnd(this);
+        }
+        return encontrado;
     }
 
     // Metodo para obtener los elementos con orden central
@@ -335,5 +596,10 @@ public class Nodo<T extends Comparable<T>> {
         } else {
             return "<-/- (NODO= " + datos + " ) -/->";
         }
+    }
+
+    @Override
+    public int compareTo(Nodo<T> o) {
+        return 0;
     }
 }
