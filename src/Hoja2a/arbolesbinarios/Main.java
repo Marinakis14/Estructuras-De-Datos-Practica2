@@ -6,12 +6,12 @@ public class Main {
         Nodo<Integer> n1 = new Nodo<>(3);
 
         ArbolBinarioDeBusqueda<Integer> a1 = new ArbolBinarioDeBusqueda<>(n1);
-        a1.ADD(5);
-        a1.ADD(7);
-        a1.ADD(7);
-        a1.ADD(6);
-        a1.ADD(2);
-        a1.ADD(4);
+        a1.add(5);
+        a1.add(7);
+        a1.add(7);
+        a1.add(6);
+        a1.add(2);
+        a1.add(4);
 
         System.out.println(a1.getListaPostOrden());
         System.out.println(a1.getListaOrdenCentral());
@@ -53,7 +53,7 @@ public class Main {
         System.out.println(a1.isArbolHomogeneo2());
         System.out.println();
 
-        a1.ADD(14);
+        a1.add(14);
         for (int i = 0; i < a1.getAltura() + 1; i++) {
             System.out.println(a1.getListaDatosNivel(i));
         }
@@ -66,28 +66,28 @@ public class Main {
         Nodo<Integer> n2 = new Nodo<>(8);
 
         ArbolBinarioDeBusqueda<Integer> a4 = new ArbolBinarioDeBusqueda<>(n2);
-        a4.ADD(4);
-        a4.ADD(12);
-        a4.ADD(2);
-        a4.ADD(2);
-        a4.ADD(6);
-        a4.ADD(10);
-        a4.ADD(14);
-        a4.ADD(14);
-        a4.ADD(1);
-        a4.ADD(1);
-        a4.ADD(3);
-        a4.ADD(5);
-        a4.ADD(7);
-        a4.ADD(9);
-        a4.ADD(9);
-        a4.ADD(9);
-        a4.ADD(11);
-        a4.ADD(13);
-        a4.ADD(13);
-        a4.ADD(13);
-        a4.ADD(13);
-        a4.ADD(15);
+        a4.add(4);
+        a4.add(12);
+        a4.add(2);
+        a4.add(2);
+        a4.add(6);
+        a4.add(10);
+        a4.add(14);
+        a4.add(14);
+        a4.add(1);
+        a4.add(1);
+        a4.add(3);
+        a4.add(5);
+        a4.add(7);
+        a4.add(9);
+        a4.add(9);
+        a4.add(9);
+        a4.add(11);
+        a4.add(13);
+        a4.add(13);
+        a4.add(13);
+        a4.add(13);
+        a4.add(15);
 
         for (int i = 0; i < a4.getAltura() + 1; i++) {
             System.out.println(a4.getListaDatosNivel(i));
@@ -127,16 +127,16 @@ public class Main {
         System.out.println(a1.getNodosHoja());
         System.out.println();
 
-        a4.DEL(15);
+        a4.delDato(15);
         System.out.println(a4.isArbolCompleto2());
         System.out.println(a4.isArbolCasiCompleto());
         System.out.println();
 
-        a4.DEL(13);
-        a4.DEL(5);
-        a4.DEL(7);
-        a4.DEL(4);
-        a4.DEL(8);
+        a4.delDato(13);
+        a4.delDato(5);
+        a4.delDato(7);
+        a4.delDato(4);
+        a4.delDato(8);
         for (int i = 0; i < a4.getAltura() + 1; i++) {
             System.out.println(a4.getListaDatosNivel(i));
         }
@@ -153,6 +153,58 @@ public class Main {
         System.out.println(a4.getCaminoDatos(2));
         System.out.println(a4.getCaminoDatos(3));
         System.out.println(a4.getCaminoDatos(13));
+        System.out.println();
+
+        System.out.println(a1);
+        a1.equilibrar();
+        System.out.println(a1);
+        System.out.println();
+
+        a4.delDato(3);
+        a4.delDato(2);
+        a4.delDato(2);
+        a4.delDato(6);
+        System.out.println(a4);
+        System.out.println(a4.equilibrar());
+        System.out.println();
+
+        a4.add(15);
+        a4.add(16);
+        a4.add(17);
+        a4.add(18);
+        a4.add(19);
+        a4.add(20);
+        a4.add(21);
+        a4.add(22);
+        a4.add(23);
+        a4.add(24);
+        a4.add(25);
+        System.out.println(a4);
+        System.out.println(a4.equilibrar());
+        System.out.println();
+
+        ArbolBinarioDeBusquedaEquilibrado<Integer> a9 = new ArbolBinarioDeBusquedaEquilibrado<>();
+        a9.add(1);
+        a9.add(2);
+        a9.add(3);
+        a9.add(4);
+        a9.add(5);
+        System.out.println(a9);
+        System.out.println();
+        a9.add(6);
+        a9.add(7);
+        a9.add(8);
+        a9.add(9);
+        a9.add(10);
+        a9.add(11);
+        System.out.println(a9);
+        System.out.println();
+        a9.add(12);
+        a9.add(13);
+        a9.add(14);
+        a9.add(15);
+        a9.add(16);
+        System.out.println(a9);
         System.out.println();
     }
 }

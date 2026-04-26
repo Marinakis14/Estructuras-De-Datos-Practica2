@@ -334,55 +334,41 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
         return (ramaIzquierda && ramaDerecha);
     }
 
-    // Metodo para saber si un arbol esta equilibrado o no
-    protected void equilibrar() {
-        // Bajamos hasta las hojas del arbol
-        if (izquierda != null) {
-            izquierda.equilibrar();
-        }
-        if (derecha != null) {
-            derecha.equilibrar();
-        }
-        // Y ahora subimos de abajo a arriba comprobando si el arbol esta equilibrado o no
-
-    }
-
-
     // Metodo para añadir un nuevo elemento al arbol de manera recursiva
-    protected void ADD(T dato) {
+    protected void add(T dato) {
         if (dato.compareTo(this.datos.get(0)) < 0) { // Lo comparamos con el primer elemento de la lista de datos porque son todos iguales
             if (izquierda == null) {
                 Nodo<T> nuevoNodo = new Nodo<>(dato);
                 izquierda = nuevoNodo;
                 return;
             }
-            izquierda.ADD(dato);
+            izquierda.add(dato);
         } else if (dato.compareTo(this.datos.get(0)) > 0) { // Lo comparamos con el primer elemento de la lista de datos porque son todos iguales
             if (derecha == null) {
                 Nodo<T> nuevoNodo = new Nodo<>(dato);
                 derecha = nuevoNodo;
                 return;
             }
-            derecha.ADD(dato);
+            derecha.add(dato);
         } else if (dato.compareTo(this.datos.get(0)) == 0) { // Si el dato es igual a un dato actual lo metemos en la lista de ese nodo
             this.datos.addEnd(dato);
         }
     }
 
     // Metodo para añadir un nuevo nodo al arbol de manera recursiva
-    protected void ADD(Nodo<T> nodo) {
+    protected void add(Nodo<T> nodo) {
         if (nodo.getDatos().get(0).compareTo(this.datos.get(0)) < 0) {
             if (izquierda == null) {
                 izquierda = nodo;
                 return;
             }
-            izquierda.ADD(nodo);
+            izquierda.add(nodo);
         } else if (nodo.getDatos().get(0).compareTo(this.datos.get(0)) > 0) {
             if (derecha == null) {
                 derecha = nodo;
                 return;
             }
-            derecha.ADD(nodo);
+            derecha.add(nodo);
         } else if (nodo.getDatos().get(0).compareTo(this.datos.get(0)) == 0) { // Si el nodo es igual a un nodo actual los "juntamos"
             for (int i = 0; i < nodo.getDatos().getSize(); i++) {
                 this.datos.addEnd(nodo.getDatos().get(0));
@@ -390,9 +376,9 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
         }
     }
 
-    // Metodo para borrar un elemento del arbol
-    protected Nodo<T> DEL(T dato) {
-        // Caso base -> encontramos el nodo -> lo eliminamos
+    // Metodo para borrar un dato del arbol
+    protected Nodo<T> delDato(T dato) {
+        // Caso base -> encontramos el dato -> lo eliminamos
         if (dato.compareTo(this.datos.get(0)) == 0) {
             // Miramos cuantos "elementos del mismo dato" hay
             if (this.datos.getSize() > 1) { // Solo hay que quitar un elemento de la lista
@@ -404,10 +390,25 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
         }
         // Resto de casos con recursividad
         else if (datos.get(0).compareTo(dato) > 0 && izquierda != null) {
-            izquierda = izquierda.DEL(dato);
+            izquierda = izquierda.delDato(dato);
+        } else if (datos.get(0).compareTo(dato) < 0 && derecha != null) {
+            derecha = derecha.delDato(dato);
         }
-        else if (datos.get(0).compareTo(dato) < 0 && derecha != null) {
-            derecha = derecha.DEL(dato);
+        // Si no encontramos el dato a borrar se queda igual
+        return this;
+    }
+
+    // Metodo para borrar un elemento del arbol
+    protected Nodo<T> delNodo(T dato) {
+        // Caso base -> encontramos el nodo -> lo eliminamos
+        if (dato.compareTo(this.datos.get(0)) == 0) {
+            return ProcesoBorrado();
+        }
+        // Resto de casos con recursividad
+        else if (datos.get(0).compareTo(dato) > 0 && izquierda != null) {
+            izquierda = izquierda.delNodo(dato);
+        } else if (datos.get(0).compareTo(dato) < 0 && derecha != null) {
+            derecha = derecha.delNodo(dato);
         }
         // Si no encontramos el dato a borrar se queda igual
         return this;
@@ -425,11 +426,11 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
             if (izquierda != null) {
                 // Si habia mas nodos a la derecha lo que hacemos es buscar el elemento mas pequeño de la rama derecha
                 // Y subirlo a donde estaba nuestro dato
-                Nodo<T> nodoMasGrande = derecha.getNodoMasPequeño();
+                Nodo<T> nodoMasPequeño = derecha.getNodoMasPequeño();
                 // Cambiamos los datos de este nodo por el nodo que queremos borrar
-                this.datos = nodoMasGrande.datos;
+                this.datos = nodoMasPequeño.datos;
                 // Borramos el nodo que hemos cambiado de su posicion anterior
-                this.derecha = derecha.DEL(nodoMasGrande.datos.get(0));
+                this.derecha = derecha.delNodo(nodoMasPequeño.datos.get(0));
                 // Una vez que hemos hecho todos los cambios devolvemos la rama
                 return this;
             }
@@ -455,8 +456,7 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
         // Resto de casos con recursividad
         else if (this.datos.get(0).compareTo(dato) > 0 && izquierda != null) {
             encontrado = izquierda.getCaminoDatos(camino, dato);
-        }
-        else if (this.datos.get(0).compareTo(dato) < 0 && derecha != null) {
+        } else if (this.datos.get(0).compareTo(dato) < 0 && derecha != null) {
             encontrado = derecha.getCaminoDatos(camino, dato);
         }
 
@@ -479,8 +479,7 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
         // Resto de casos con recursividad
         else if (this.datos.get(0).compareTo(dato) > 0 && izquierda != null) {
             encontrado = izquierda.getCaminoNodos(camino, dato);
-        }
-        else if (this.datos.get(0).compareTo(dato) < 0 && derecha != null) {
+        } else if (this.datos.get(0).compareTo(dato) < 0 && derecha != null) {
             encontrado = derecha.getCaminoNodos(camino, dato);
         }
 
@@ -490,6 +489,154 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
         }
         return encontrado;
     }
+
+    // Metodo para ver si un arbol esta equilibrado o no
+    protected Nodo<T> equilibrarBase() {
+        // Calculamos las alturas de los hijos
+        if (izquierda != null) {
+            izquierda = izquierda.equilibrarBase();
+        }
+        if (derecha != null) {
+            derecha = derecha.equilibrarBase();
+        }
+        // Creamos dos variables para ver la profundidad de cada rama
+        int Hi = 0;
+        int Hd = 0;
+        if (izquierda != null) {
+            Hi = izquierda.getAltura();
+        }
+        if (derecha != null) {
+            Hd = derecha.getAltura();
+        }
+        // Vemos si tenemos que equilibrar el arbol
+        if (Hi - Hd > 1) {
+            // Si esta desequilibrado hacia la izquierda
+            // Tenemos que decirle a nuestro metodo en que caso estamos (rotacion simple, o doble rotacion)
+            int Hii = 0;
+            int Hid = 0;
+            // Comprobamos que los hijos no son nulos para que no de error al calcular su altura
+            if (izquierda.izquierda != null) {
+                Hii = izquierda.izquierda.getAltura();
+            }
+            if (izquierda.derecha != null) {
+                Hid = izquierda.derecha.getAltura();
+            }
+            // Miramos el tipo de rotacion
+            if (Hii >= Hid) { // Si es rotacion simple
+                return equilibrarAuxiliar(2);
+            } else { // Si es rotacion doble
+                return equilibrarAuxiliar(3);
+            }
+        } else if (Hi - Hd < -1) {
+            // Si esta desequilibrado hacia la derecha
+            // Tenemos que decirle a nuestro metodo en que caso estamos (rotacion simple, o doble rotacion)
+            int Hdi = 0;
+            int Hdd = 0;
+            // Comprobamos que los hijos no son nulos para que no de error al calcular su altura
+            if (derecha.derecha != null) {
+                Hdd = derecha.derecha.getAltura();
+            }
+            if (derecha.izquierda != null) {
+                Hdi = derecha.izquierda.getAltura();
+            }
+            // Miramos el tipo de rotacion
+            if (Hdd >= Hdi) { // Si es rotacion simple
+                return equilibrarAuxiliar(1);
+            } else {
+                return equilibrarAuxiliar(4);
+            }
+        }
+        return this;
+    }
+
+    // Metodo auxiliar para equilibrar el arbol
+    protected Nodo<T> equilibrarAuxiliar(int desequilibrio) {
+        // La variable desequilibrio nos indica el tipo de ratacion que hay que hacer
+        if (desequilibrio == 1) { // Caso 1 -> izquierda-izquierda
+            return this.rotacionHaciaIzquierda(this);
+        } else if (desequilibrio == 2) { //Caso 2 -> derecha-derecha
+            return this.rotacionHaciaDerecha(this);
+        } else if (desequilibrio == 3) { //Caso 2 -> izquierda-derecha
+            return this.dobleRotacionIzquierda(this);
+        } else if (desequilibrio == 4) { //Caso 2 -> derecha-izquierda
+            return this.dobleRotacionDerecha(this);
+        }
+        // Si el valor de desequilibrio no es valido
+        return this;
+    }
+
+    /**
+     * Rotaciones para equilibrar los árboles
+     */
+    protected Nodo<T> rotacionHaciaIzquierda(Nodo<T> nodo) {
+        // Tenemos dos nodos (o mas) seguidos hacia la derecha y tenemos que rotarlos hacia la izquierda
+        // Comprobamos que el nodo es valido
+        if (nodo == null || nodo.derecha == null) {
+            return nodo;
+        }
+        // Realizamos el giro
+        Nodo<T> nodoGuardado = nodo.derecha.izquierda;
+        Nodo<T> nuevaRaiz = nodo.derecha;
+        // El nodo del medio pasa a la posicion del nodo actual y el nodo actual se coloca como hijo izquierdo
+        nuevaRaiz.izquierda = nodo;
+        // recolocamos el hijo derecho que tenia antes
+        nodo.derecha = nodoGuardado;
+        // Los demas nodos se quedan igual
+
+        return nuevaRaiz;
+    }
+
+    protected Nodo<T> rotacionHaciaDerecha(Nodo<T> nodo) {
+        // Tenemos dos nodos (o mas) seguidos hacia la izquierda y tenemos que rotarlos hacia la derecha
+        // Comprobamos que el nodo es valido
+        if (nodo == null || nodo.izquierda == null) {
+            return nodo;
+        }
+        // Realizamos el giro
+        Nodo<T> nodoGuardado = nodo.izquierda.derecha;
+        Nodo<T> nuevaRaiz = nodo.izquierda;
+        // El nodo del medio pasa a la posicion del nodo actual y el nodo actual se coloca como hijo izquierdo
+        nuevaRaiz.derecha = nodo;
+        // recolocamos el hijo derecho que tenia antes
+        nodo.izquierda = nodoGuardado;
+        // Los demas nodos se quedan igual
+
+        return nuevaRaiz;
+    }
+
+    protected Nodo<T> dobleRotacionDerecha(Nodo<T> nodo) {
+        // Tenemos un hilo de tres nodos en zig-zag nodo-derecha-izquierda
+        // Comprobamos que el nodo es valido
+        if (nodo != null && nodo.derecha != null && nodo.derecha.izquierda != null) {
+            // Realizamos una modificacion para llegar a uno de los casos anteriores
+            // En este caso queremos llegar al caso de los nodos en fila hacia la derecha asi que
+            // Llevamos el nodo de abajo a la posicion del medio y el del medio a la derecha con una rotacion hacia derechas
+            nodo.derecha = nodo.rotacionHaciaDerecha(nodo.derecha);
+            // Y ahora ejecutamos la rotacion hacia izquierdas
+            return nodo.rotacionHaciaIzquierda(nodo);
+        }
+        // Si no se puede hacer el ajuste
+        return nodo;
+    }
+
+    protected Nodo<T> dobleRotacionIzquierda(Nodo<T> nodo) {
+        // Tenemos un hilo de tres nodos en zig-zag nodo-izquierda-derecha
+        // Comprobamos que el nodo es valido
+        if (nodo != null && nodo.izquierda != null && nodo.izquierda.derecha != null) {
+            // Realizamos una modificacion para llegar a uno de los casos anteriores
+            // En este caso queremos llegar al caso de los nodos en fila hacia la izquierda asi que
+            // Llevamos el nodo de abajo a la posicion del medio y el del medio a la izquierda con una rotacion hacia izquierdas
+            nodo.izquierda = nodo.rotacionHaciaIzquierda(nodo.izquierda);
+            // Y ahora ejecutamos la rotacion hacia derechas
+            return nodo.rotacionHaciaDerecha(nodo);
+        }
+        // Si no se puede hacer el ajuste
+        return nodo;
+    }
+
+    /**
+     * 3 tipos de listas de datos para representar los datos que contiene el arbol con distinto orden
+     */
 
     // Metodo para obtener los elementos con orden central
     protected void ordenCentral(ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> elementosArbol) {
@@ -522,65 +669,6 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
             derecha.postOrden(elementosArbol);
         }
         elementosArbol.addEnd(datos);
-    }
-
-    /**
-     * Rotaciones para equilibrar los árboles
-     */
-    protected void rotacionHaciaIzquierda(Nodo<T> nodo) {
-        // Tenemos un hilo de tres nodos seguidos hacia la derecha y tenemos que rotarlos hacia la izquierda
-        // Comprobamos que el nodo es valido
-        if (nodo != null && nodo.derecha != null && nodo.derecha.derecha != null) {
-            // Realizamos el giro
-            Nodo<T> nodoActual = nodo;
-            // El nodo del medio pasa a la posicion del nodo actual
-            nodo = nodo.derecha;
-            // Los demas se colocan como hijos
-            nodo.derecha.izquierda = nodoActual;
-            // El otro ya esta a la derecha asi que se queda igual
-        }
-    }
-
-    protected void rotacionHaciaDerecha(Nodo<T> nodo) {
-        // Tenemos un hilo de tres nodos seguidos hacia la izquierda y tenemos que rotarlos hacia la derecha
-        // Comprobamos que el nodo es valido
-        if (nodo != null && nodo.izquierda != null && nodo.izquierda.izquierda != null) {
-            // Realizamos el giro
-            Nodo<T> nodoActual = nodo;
-            // El nodo del medio pasa a la posicion del nodo actual
-            nodo = nodo.izquierda;
-            // Los demas se colocan como hijos
-            nodo.izquierda.derecha = nodoActual;
-            // El otro ya esta a la izquierda asi que se queda igual
-        }
-    }
-
-    protected void ajusteHaciaIzquierda(Nodo<T> nodo) {
-        // Tenemos un hilo de tres nodos en zig-zag izquierda-derecha-izquierda
-        // Comprobamos que el nodo es valido
-        if (nodo != null && nodo.derecha != null && nodo.derecha.izquierda != null) {
-            // Realizamos una modificacion para llegar a uno de los casos anteriores
-            Nodo<T> nodoDerecha = nodo.derecha;
-            nodo.derecha = nodo.derecha.izquierda;
-            // colocamos el nodo que hemos cambiado como hijo
-            nodo.derecha.derecha = nodoDerecha;
-            // Ahora usamos el caso anterior
-            rotacionHaciaIzquierda(nodo);
-        }
-    }
-
-    protected void ajusteHaciaDerecha(Nodo<T> nodo) {
-        // Tenemos un hilo de tres nodos en zig-zag dercha-izquierda-derecha
-        // Comprobamos que el nodo es valido
-        if (nodo != null && nodo.izquierda != null && nodo.izquierda.derecha != null) {
-            // Realizamos una modificacion para llegar a uno de los casos anteriores
-            Nodo<T> nodoIzquierda = nodo.izquierda;
-            nodo.izquierda = nodo.izquierda.derecha;
-            // colocamos el nodo que hemos cambiado como hijo
-            nodo.izquierda.izquierda = nodoIzquierda;
-            // Ahora usamos el caso anterior
-            rotacionHaciaDerecha(nodo);
-        }
     }
 
     /**

@@ -25,8 +25,9 @@ public interface InterfazArbol <T extends Comparable<T>> {
     ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> getNodosHoja();
     Nodo<T> getNodoMasPequeño();
     Nodo<T> getNodoMasGrande();
-    void ADD(T dato);
-    void DEL(T dato);
+    void add(T dato);
+    void delDato(T dato);
+    void delNodo(T dato);
     ListaSimplementeEnlazada<ListaSimplementeEnlazada<T>> getCaminoDatos(T dato);
     ListaSimplementeEnlazada<Nodo<T>> getCaminoNodos(T dato);
 
@@ -35,7 +36,7 @@ public interface InterfazArbol <T extends Comparable<T>> {
     boolean isArbolHomogeneo2();
     boolean isArbolCompleto();
     boolean isArbolCasiCompleto();
-    boolean isEquilibrado();
+    ArbolBinarioDeBusqueda<T> equilibrar();
     ArbolBinarioDeBusqueda<T> getSubArbolIzquierda();
     ArbolBinarioDeBusqueda<T> getSubArbolDerecha();
 

@@ -339,43 +339,13 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
 
     // Metodo para saber si un arbol esta equilibrado o no
     @Override
-    public boolean isEquilibrado() {
-        int alturaIzq = 0;
-        int alturaDer = 0;
-
-        // calcular altura izquierda
-        if (getSubArbolIzquierda() != null) {
-            alturaIzq = getSubArbolIzquierda().getAltura();
+    public ArbolBinarioDeBusqueda<T> equilibrar() {
+        if (raiz == null) { // si el arbol estaba vacio no se puede equilibrar
+            return this;
+        } else {
+            raiz = raiz.equilibrarBase();
+            return this;
         }
-
-        // calcular altura derecha
-        if (getSubArbolDerecha() != null) {
-            alturaDer = getSubArbolDerecha().getAltura();
-        }
-
-        // variable para calcular el grado de desequilibrio
-        // si desequilibrio > 1 -> esta desequilibrado
-        int desequilibrio = Math.abs(alturaIzq - alturaDer);
-
-        // Caso base
-        if (desequilibrio > 1) {
-            return false;
-        }
-        // resto de casos
-        // miramos rama de la izquierda
-        if (getSubArbolIzquierda() != null) {
-            if (!getSubArbolIzquierda().isEquilibrado()) { // si el arbol izquierdo esta desequilibrado
-                return false;
-            }
-        }
-        // miramos rama de la derecha
-        if (getSubArbolDerecha() != null) {
-            if (!getSubArbolDerecha().isEquilibrado()) { // si el arbol derecho esta desequilibrado
-                return false;
-            }
-        }
-        // si todo esta bien
-        return true;
     }
 
     /**
@@ -384,24 +354,30 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
 
     // Metodo para añadir elemento al arbol
     @Override
-    public void ADD(T dato) {
+    public void add(T dato) {
         if (dato == null) { // si no se introduce un dato valido
             return;
         }
         if (raiz == null) { // si el arbol estaba vacio se crea un nuevo arbol con el elemento dado como raiz
             this.raiz = new Nodo<>(dato);
         } else { // si ya habia algun elemento lo añadimos a traves de la clase nodo
-            raiz.ADD(dato);
+            raiz.add(dato);
+        }
+    }
+
+    // Metodo para eliminar datos del arbol
+    @Override
+    public void delDato(T dato) {
+        if (dato != null && raiz != null) { // hay que ver que se introduce un dato valido y que el arbol estaba vacio
+            raiz.delDato(dato);
         }
     }
 
     // Metodo para eliminar elementos del arbol
     @Override
-    public void DEL(T dato) {
-        if (dato == null || raiz == null) { // si no se introduce un dato valido o si el arbol estaba vacio
-            return;
-        } else {
-            raiz.DEL(dato);
+    public void delNodo(T dato) {
+        if (dato != null && raiz != null) { // hay que ver que se introduce un dato valido y que el arbol estaba vacio
+            raiz.delNodo(dato);
         }
     }
 
@@ -495,5 +471,16 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
             return elementosArbol;
         }
         return elementosArbol;
+    }
+
+    /**
+     * Metodo toString para poder visualizar el arbol por niveles
+     */
+    public String toString() {
+        String arbol = "";
+        for (int i = 0; i < getAltura() + 1; i++) {
+            arbol += getListaDatosNivel(i) + "\n";
+        }
+        return arbol;
     }
 }
