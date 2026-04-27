@@ -117,9 +117,9 @@ public class Main {
         System.out.println(a1.isArbolCompleto2());
         System.out.println();
 
-        System.out.println(a4.getRepeticionesNodo(13));
-        System.out.println(a4.getRepeticionesNodo(9));
-        System.out.println(a4.getRepeticionesNodo(5));
+        System.out.println(a4.getRepeticionesDato(13));
+        System.out.println(a4.getRepeticionesDato(9));
+        System.out.println(a4.getRepeticionesDato(5));
         System.out.println();
 
         System.out.println(a4.getNodosHoja());

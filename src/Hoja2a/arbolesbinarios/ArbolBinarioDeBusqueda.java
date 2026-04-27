@@ -17,10 +17,8 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
     }
 
     ArbolBinarioDeBusqueda(T dato) { // para crear un arbol con un elemento dado
-        if (dato == null) {
-            Nodo<T> nuevaRaiz = new Nodo<>(dato);
-            this.raiz = nuevaRaiz;
-        }
+        Nodo<T> nuevaRaiz = new Nodo<>(dato);
+        this.raiz = nuevaRaiz;
     }
 
     // Getters y Setters para la variable raiz
@@ -44,7 +42,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
         return raiz == null; // devuelve true si el arbol esta vacio
     }
 
-    // Metodo que dado un nodo devuelve el nodo que tiene a la izqueirda
+    // Metodo que dado un nodo devuelve el nodo que tiene a la izquierda
     @Override
     public Nodo<T> getIzquierda(Nodo<T> nodo) {
         if (nodo != null) {
@@ -85,7 +83,6 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
     }
 
     // Metodo que devuelve cuantas veces se ha introducido un mismo dato dado el nodo
-    @Override
     public int getRepeticionesNodo(Nodo<T> nodo) {
         if (nodo != null) {
             ListaSimplementeEnlazada<T> datosNodo = nodo.getDatos();
@@ -97,8 +94,8 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
 
     // Metodo que devuelve cuantas veces se ha introducido un mismo dato dado el dato
     @Override
-    public int getRepeticionesNodo(T dato) {
-        if (dato != null) {
+    public int getRepeticionesDato(T dato) {
+        if (dato != null && raiz != null) {
             return raiz.getRepeticionesNodo(dato);
         }
         // Si esta vacio
@@ -153,7 +150,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
 
         // Comprobamos que el nivel dado es valido
         if (nivel > raiz.getAltura() || nivel < 0) {
-            return null;
+            return new ListaSimplementeEnlazada<>(); // Devolvemos una lista vacia
         } else if (nivel == 0) { // el nivel 0 del arbol es la raiz
             elementos.addEnd(raiz.getDatos());
             return elementos;
@@ -172,7 +169,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
 
         // Comprobamos que el nivel dado es valido
         if (nivel > raiz.getAltura() || nivel < 0) {
-            return null;
+            return new ListaSimplementeEnlazada<>(); // Devolvemos una lista vacia
         } else if (nivel == 0) { // el nivel 0 del arbol es la raiz
             elementos.addEnd(raiz);
             return elementos;

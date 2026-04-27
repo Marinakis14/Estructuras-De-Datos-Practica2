@@ -15,7 +15,7 @@ public interface InterfazArbol <T extends Comparable<T>> {
     T getDato(Nodo<T> nodo);
     ListaSimplementeEnlazada<T> getDatos(Nodo<T> nodo);
     int getRepeticionesNodo(Nodo<T> nodo);
-    int getRepeticionesNodo(T dato);
+    int getRepeticionesDato(T dato);
     int getGrado();
     boolean isNodoInArbol(T dato);
     int getAltura();
