@@ -5,13 +5,13 @@ import java.util.List;
 
 public class Grafo {
 
-    // Lista que almacena todos los nodos del grafo
+    // Lista de nodos del grafo
     private List<Nodo> nodos;
 
-    // Lista que almacenará las aristas
+    // Lista de aristas del grafo
     private List<Arista> aristas;
 
-    // Constructor: inicializa las listas vacías
+    // Constructor
     public Grafo() {
         nodos = new ArrayList<>();
         aristas = new ArrayList<>();
@@ -33,25 +33,26 @@ public class Grafo {
         this.aristas = aristas;
     }
 
-
-    // Añade un nodo al grafo si no está ya incluido
+    // Añade un nodo si no existe
     public void addNodo(Nodo nodo) {
         if (!nodos.contains(nodo)) {
             nodos.add(nodo);
         }
     }
 
+    // Añade una arista al grafo
     public void addArista(Arista arista) {
         addNodo(arista.getOrigen());
         addNodo(arista.getDestino());
         aristas.add(arista);
     }
 
-
+    // Crea y añade una arista
     public void addArista(Nodo origen, String predicado, Nodo destino) {
         addArista(new Arista(origen, predicado, destino));
     }
 
+    // Busca un nodo por su id
     public Nodo buscarNodoPorId(String id) {
         for (Nodo nodo : nodos) {
             if (nodo.getId().equals(id)) {
@@ -60,6 +61,8 @@ public class Grafo {
         }
         return null;
     }
+
+    // Devuelve los vecinos salientes
     public List<Nodo> getVecinos(Nodo nodo) {
         List<Nodo> vecinos = new ArrayList<>();
 
@@ -70,6 +73,8 @@ public class Grafo {
         }
         return vecinos;
     }
+
+    // Calcula el camino mínimo
     public List<Nodo> caminoMinimo(String idOrigen, String idDestino) {
         Nodo origen = buscarNodoPorId(idOrigen);
         Nodo destino = buscarNodoPorId(idDestino);
@@ -89,6 +94,7 @@ public class Grafo {
 
         int indice = 0;
         boolean encontrado = false;
+
         while ( indice < cola.size() && !encontrado) {
             Nodo actual = cola.get(indice);
 
@@ -125,6 +131,7 @@ public class Grafo {
         return camino;
     }
 
+    // Devuelve vecinos en ambos sentidos
     public List<Nodo> getVecinosNoDirigidos(Nodo nodo) {
         List<Nodo> vecinos = new ArrayList<>();
 
@@ -141,6 +148,7 @@ public class Grafo {
         return vecinos;
     }
 
+    // Comprueba si el grafo está separado
     public boolean esDisjunto() {
         if (nodos.isEmpty()) {
             return false;
@@ -172,6 +180,7 @@ public class Grafo {
         return visitados.size() != nodos.size();
     }
 
+    // Busca destinos por predicado
     public List<Nodo> getDestinosPorPredicado(Nodo origen, String predicado) {
         List<Nodo> destinos = new ArrayList<>();
 
@@ -184,6 +193,7 @@ public class Grafo {
         return destinos;
     }
 
+    // Busca orígenes por predicado y destino
     public List<Nodo> getOrigenesPorPredicadoYDestino(String predicado, Nodo destino) {
         List<Nodo> origenes = new ArrayList<>();
 
@@ -196,6 +206,7 @@ public class Grafo {
         return origenes;
     }
 
+    // Busca personas nacidas en la misma ciudad
     public List<Nodo> personasMismaCiudadQue(String idPersona) {
         List<Nodo> resultado = new ArrayList<>();
 
@@ -224,6 +235,7 @@ public class Grafo {
         return resultado;
     }
 
+    // Busca lugares de nacimiento de premios Nobel
     public List<Nodo> lugaresNacimientoPremiosNobel() {
         List<Nodo> lugares = new ArrayList<>();
 
@@ -243,5 +255,4 @@ public class Grafo {
 
         return lugares;
     }
-
 }
