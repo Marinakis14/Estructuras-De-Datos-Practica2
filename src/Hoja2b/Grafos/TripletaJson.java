@@ -1,7 +1,7 @@
 package Hoja2b.Grafos;
 
 // Representa una tripleta del JSON (sujeto, predicado, objeto)
-public class TripletaJson {
+public class TripletaJson implements Comparable<TripletaJson> {
 
     // Sujeto
     private String s;
@@ -37,5 +37,10 @@ public class TripletaJson {
 
     public void setO(String o) {
         this.o = o;
+    }
+
+    @Override
+    public int compareTo(TripletaJson o) {
+        return 0;
     }
 }

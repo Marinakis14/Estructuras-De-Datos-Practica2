@@ -2,7 +2,12 @@ package Hoja2b.Grafos;
 
 import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 
+import java.util.List;
+
 public class Grafo<T extends Comparable<T>> {
+
+    // Lista de tipos de nodos del grafo
+    private List<String> tipos;
 
     // Lista de nodos del grafo
     private ListaSimplementeEnlazada<NodoGrafo<T>> nodos;
@@ -12,11 +17,20 @@ public class Grafo<T extends Comparable<T>> {
 
     // Constructor
     public Grafo() {
+        ListaSimplementeEnlazada<T> tipos = new ListaSimplementeEnlazada<>();
         ListaSimplementeEnlazada<T> nodos = new ListaSimplementeEnlazada<>();
         ListaSimplementeEnlazada<T> aristas = new ListaSimplementeEnlazada<>();
     }
 
-    public ListaSimplementeEnlazada<NodoGrafo<T>> getNodos() {
+    public ListaSimplementeEnlazada<T> String getTipos() {
+        return tipos;
+    }
+
+    public void setTipos(ListaSimplementeEnlazada<String> tipos) {
+        this.tipos = tipos;
+    }
+
+    public ListaSimplementeEnlazada<Nodo<T>> getNodos() {
         return nodos;
     }
 
@@ -32,21 +46,28 @@ public class Grafo<T extends Comparable<T>> {
         this.aristas = aristas;
     }
 
-    // Añade un nodo si no existe
-    public void addNodo(NodoGrafo<T> nodo) {
+    // Anade un tipo si no existe
+    public void addTipo(String tipo) {
+        if (!tipos.contains(tipo)) {
+            tipos.add(tipo);
+        }
+    }
+
+    // Anade un nodo si no existe
+    public void addNodo(Nodo nodo) {
         if (!nodos.contains(nodo)) {
             nodos.addEnd(nodo);
         }
     }
 
-    // Añade una arista al grafo
+    // Anade una arista al grafo
     public void addArista(Arista<T> arista) {
         addNodo(arista.getOrigen());
         addNodo(arista.getDestino());
         aristas.addEnd(arista);
     }
 
-    // Crea y añade una arista
+    // Crea y anade una arista
     public void addArista(NodoGrafo<T> origen, String predicado, NodoGrafo<T> destino) {
         addArista(new Arista<>(origen, predicado, destino));
     }
@@ -59,6 +80,31 @@ public class Grafo<T extends Comparable<T>> {
             }
         }
         return null;
+    }
+
+    // Devuelve los tipos de nodos conocidos
+    public List<String> getTiposDeNodos() {
+        List<String> resultado = new ArrayList<>();
+
+        for (String tipo : tipos) {
+            if (!resultado.contains(tipo)) {
+                resultado.add(tipo);
+            }
+        }
+
+        for (Nodo nodo : nodos) {
+            String id = nodo.getId();
+
+            if (id.contains(":")) {
+                String tipo = id.substring(0, id.indexOf(":"));
+
+                if (!resultado.contains(tipo)) {
+                    resultado.add(tipo);
+                }
+            }
+        }
+
+        return resultado;
     }
 
     // Devuelve los vecinos salientes
@@ -234,15 +280,36 @@ public class Grafo<T extends Comparable<T>> {
         return resultado;
     }
 
+    // Busca fisicos nacidos en la misma ciudad que una persona
+    public List<Nodo> fisicosMismaCiudadQue(String idPersona) {
+        List<Nodo> resultado = new ArrayList<>();
+        List<Nodo> personas = personasMismaCiudadQue(idPersona);
+
+        for (Nodo persona : personas) {
+            List<Nodo> profesiones = getDestinosPorPredicado(persona, "profesion");
+
+            for (Nodo profesion : profesiones) {
+                if (profesion.getId().equals("profesion:fisico") || profesion.getId().equals("fisico")) {
+                    resultado.add(persona);
+                    break;
+                }
+            }
+        }
+
+        return resultado;
+    }
+
     // Busca lugares de nacimiento de premios Nobel
     public ListaSimplementeEnlazada<NodoGrafo<T>> lugaresNacimientoPremiosNobel() {
-        ListaSimplementeEnlazada<NodoGrafo<T>> lugares = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<NodoGrafo<T>> lugares = new ListaSimplementeEnlazada<NodoGrafo<T>>();
+        Nodo<T> premioNobel = buscarNodoPorId("premio:Nobel");
 
-        for (NodoGrafo<T> persona : nodos) {
-            ListaSimplementeEnlazada<NodoGrafo<T>> nobeles = getDestinosPorPredicado(persona, "premio:Nobel");
+        for (Nodo<T> persona : nodos) {
+            ListaSimplementeEnlazada<NodoGrafo<T>> premios = getDestinosPorPredicado(persona, "premio");
+            ListaSimplementeEnlazada<NodoGrafo<T>> nobelesAntiguos = getDestinosPorPredicado(persona, "premio:Nobel");
 
-            if (!nobeles.isEmpty()) {
-                ListaSimplementeEnlazada<NodoGrafo> nacimientos = getDestinosPorPredicado(persona, "nace_en");
+            if ((premioNobel != null && premios.contains(premioNobel)) || !nobelesAntiguos.isEmpty()) {
+                ListaSimplementeEnlazada<NodoGrafo<T>> nacimientos = getDestinosPorPredicado(persona, "nace_en");
 
                 for (NodoGrafo<T> lugar : nacimientos) {
                     if (!lugares.contains(lugar)) {

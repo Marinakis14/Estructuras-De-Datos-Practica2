@@ -31,14 +31,17 @@ public class NodoGrafo<T extends Comparable<T>> implements Comparable<NodoGrafo<
         if (!(obj instanceof NodoGrafo)) {
             return false;
         }
-        NodoGrafo nodo = (NodoGrafo) obj;
-        return Objects.equals(id, nodo.id);
-    }
 
-    // Genera hash basado en id
-    @Override
-    public int hashCode(){
-        return Objects.hash(id);
+        NodoGrafo<T> nodo = (NodoGrafo<T>) obj;
+
+        if (id == null && nodo.id == null) {
+            return true;
+        }
+        if (id == null || nodo.id == null) {
+            return false;
+        }
+
+        return id.equals(nodo.id);
     }
 
     // Devuelve el id como texto

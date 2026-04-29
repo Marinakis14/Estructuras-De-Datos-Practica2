@@ -1,33 +1,34 @@
 package Hoja2b.Grafos;
 
-import java.util.List;
+import MisEstructurasDeDatos.ListaSimplementeEnlazada;
+
 
 // Clase que representa los datos del JSON del grafo
 public class DatosGrafoJson {
 
     // Lista de tipos de nodos
-    private List<String> tipos;
+    private ListaSimplementeEnlazada<String> tipos;
 
     // Lista de tripletas (relaciones)
-    private List<TripletaJson> tripletas;
+    private ListaSimplementeEnlazada<TripletaJson> tripletas;
 
     // Getter de tipos
-    public List<String> getTipos() {
+    public ListaSimplementeEnlazada<String> getTipos() {
         return tipos;
     }
 
     // Setter de tipos
-    public void setTipos(List<String> tipos) {
+    public void setTipos(ListaSimplementeEnlazada<String> tipos) {
         this.tipos = tipos;
     }
 
     // Getter de tripletas
-    public List<TripletaJson> getTripletas() {
+    public ListaSimplementeEnlazada<TripletaJson> getTripletas() {
         return tripletas;
     }
 
     // Setter de tripletas
-    public void setTripletas(List<TripletaJson> tripletas) {
+    public void setTripletas(ListaSimplementeEnlazada<TripletaJson> tripletas) {
         this.tripletas = tripletas;
     }
 }
