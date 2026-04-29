@@ -1,10 +1,18 @@
 package Hoja2b.Grafos;
 
-public class TripletaJson {
+// Representa una tripleta del JSON (sujeto, predicado, objeto)
+public class TripletaJson implements Comparable<TripletaJson> {
+
+    // Sujeto
     private String s;
+
+    // Predicado
     private String p;
+
+    // Objeto
     private String o;
 
+    // Getter y setter de s
     public String getS() {
         return s;
     }
@@ -13,6 +21,7 @@ public class TripletaJson {
         this.s = s;
     }
 
+    // Getter y setter de p
     public String getP() {
         return p;
     }
@@ -21,11 +30,17 @@ public class TripletaJson {
         this.p = p;
     }
 
+    // Getter y setter de o
     public String getO() {
         return o;
     }
 
     public void setO(String o) {
         this.o = o;
+    }
+
+    @Override
+    public int compareTo(TripletaJson o) {
+        return 0;
     }
 }

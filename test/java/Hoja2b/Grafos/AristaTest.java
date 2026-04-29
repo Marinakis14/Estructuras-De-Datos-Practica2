@@ -8,8 +8,8 @@ public class AristaTest {
 
     @Test
     public void testConstructorYGetters() {
-        Nodo origen = new Nodo("persona:Albert Einstein");
-        Nodo destino = new Nodo("lugar:Ulm");
+        NodoGrafo origen = new NodoGrafo("persona:Albert Einstein");
+        NodoGrafo destino = new NodoGrafo("lugar:Ulm");
         Arista arista = new Arista(origen, "nace_en", destino);
 
         assertEquals(origen, arista.getOrigen());
@@ -19,11 +19,11 @@ public class AristaTest {
 
     @Test
     public void testSetOrigen() {
-        Nodo origenInicial = new Nodo("persona:Albert Einstein");
-        Nodo destino = new Nodo("lugar:Ulm");
+        NodoGrafo origenInicial = new NodoGrafo("persona:Albert Einstein");
+        NodoGrafo destino = new NodoGrafo("lugar:Ulm");
         Arista arista = new Arista(origenInicial, "nace_en", destino);
 
-        Nodo nuevoOrigen = new Nodo("persona:Marie Curie");
+        NodoGrafo nuevoOrigen = new NodoGrafo("persona:Marie Curie");
         arista.setOrigen(nuevoOrigen);
 
         assertEquals(nuevoOrigen, arista.getOrigen());
@@ -31,8 +31,8 @@ public class AristaTest {
 
     @Test
     public void testSetPredicado() {
-        Nodo origen = new Nodo("persona:Albert Einstein");
-        Nodo destino = new Nodo("lugar:Ulm");
+        NodoGrafo origen = new NodoGrafo("persona:Albert Einstein");
+        NodoGrafo destino = new NodoGrafo("lugar:Ulm");
         Arista arista = new Arista(origen, "nace_en", destino);
 
         arista.setPredicado("vive_en");
@@ -42,11 +42,11 @@ public class AristaTest {
 
     @Test
     public void testSetDestino() {
-        Nodo origen = new Nodo("persona:Albert Einstein");
-        Nodo destinoInicial = new Nodo("lugar:Ulm");
+        NodoGrafo origen = new NodoGrafo("persona:Albert Einstein");
+        NodoGrafo destinoInicial = new NodoGrafo("lugar:Ulm");
         Arista arista = new Arista(origen, "nace_en", destinoInicial);
 
-        Nodo nuevoDestino = new Nodo("lugar:Varsovia");
+        NodoGrafo nuevoDestino = new NodoGrafo("lugar:Varsovia");
         arista.setDestino(nuevoDestino);
 
         assertEquals(nuevoDestino, arista.getDestino());
@@ -54,8 +54,8 @@ public class AristaTest {
 
     @Test
     public void testToString() {
-        Nodo origen = new Nodo("persona:Albert Einstein");
-        Nodo destino = new Nodo("lugar:Ulm");
+        NodoGrafo origen = new NodoGrafo("persona:Albert Einstein");
+        NodoGrafo destino = new NodoGrafo("lugar:Ulm");
         Arista arista = new Arista(origen, "nace_en", destino);
 
         String esperado = "persona:Albert Einstein ---[nace_en]---> lugar:Ulm";

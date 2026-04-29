@@ -13,12 +13,20 @@ public class LectorGrafoJson {
         try (FileReader reader = new FileReader(ruta)) {
             DatosGrafoJson datos = gson.fromJson(reader, DatosGrafoJson.class);
 
-            for (TripletaJson tripleta : datos.getTripletas()) {
-                Nodo origen = new Nodo(tripleta.getS());
-                Nodo destino = new Nodo(tripleta.getO());
-                String predicado = tripleta.getP();
+            if (datos.getTipos() != null) {
+                for (String tipo : datos.getTipos()) {
+                    grafo.addTipo(tipo);
+                }
+            }
 
-                grafo.addArista(origen, predicado, destino);
+            if (datos.getTripletas() != null) {
+                for (TripletaJson tripleta : datos.getTripletas()) {
+                    Nodo origen = new Nodo(tripleta.getS());
+                    Nodo destino = new Nodo(tripleta.getO());
+                    String predicado = tripleta.getP();
+
+                    grafo.addArista(origen, predicado, destino);
+                }
             }
 
         } catch (IOException e) {

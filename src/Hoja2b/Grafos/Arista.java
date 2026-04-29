@@ -1,20 +1,29 @@
 package Hoja2b.Grafos;
 
-public class Arista {
-    private Nodo origen;
-    private String predicado;
-    private Nodo destino;
+// Arista que conecta dos nodos con una relación
+public class Arista<T extends Comparable<T>> implements Comparable<Arista<T>> {
 
-    public Arista(Nodo origen, String predicado, Nodo destino) {
+    // Nodo inicial
+    private NodoGrafo<T> origen;
+
+    // Tipo de relación
+    private String predicado;
+
+    // Nodo final
+    private NodoGrafo<T> destino;
+
+    // Constructor
+    public Arista(NodoGrafo<T> origen, String predicado, NodoGrafo<T> destino) {
         this.origen = origen;
         this.predicado = predicado;
         this.destino = destino;
     }
 
-    public Nodo getOrigen(){
+    // Getters y setters
+    public NodoGrafo<T> getOrigen(){
         return origen;
     }
-    public void setOrigen(Nodo origen){
+    public void setOrigen(NodoGrafo<T> origen){
         this.origen = origen;
     }
     public String getPredicado(){
@@ -23,15 +32,21 @@ public class Arista {
     public void setPredicado(String predicado){
         this.predicado = predicado;
     }
-    public Nodo getDestino(){
+    public NodoGrafo<T> getDestino(){
         return destino;
     }
-    public void setDestino(Nodo destino){
+    public void setDestino(NodoGrafo<T> destino){
         this.destino = destino;
     }
 
+    // Devuelve la arista en formato texto
     @Override
     public String toString(){
         return  origen + " ---[" + predicado + "]---> " + destino;
+    }
+
+    @Override
+    public int compareTo(Arista o) {
+        return 0;
     }
 }
