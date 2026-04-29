@@ -20,7 +20,7 @@ public class Grafo<T extends Comparable<T>> {
         ListaSimplementeEnlazada<T> aristas = new ListaSimplementeEnlazada<>();
     }
 
-    public ListaSimplementeEnlazada<T> String getTipos() {
+    public ListaSimplementeEnlazada<String> getTipos() {
         return tipos;
     }
 
@@ -28,7 +28,7 @@ public class Grafo<T extends Comparable<T>> {
         this.tipos = tipos;
     }
 
-    public ListaSimplementeEnlazada<Nodo<T>> getNodos() {
+    public ListaSimplementeEnlazada<NodoGrafo<T>> getNodos() {
         return nodos;
     }
 
@@ -72,7 +72,8 @@ public class Grafo<T extends Comparable<T>> {
 
     // Busca un nodo por su id
     public NodoGrafo<T> buscarNodoPorId(String id) {
-        for (NodoGrafo<T> nodo : nodos) {
+        for (int i = 0; i < nodos.getSize(); i++) {
+            NodoGrafo<T> nodo = nodos.get(i);
             if (nodo.getId().equals(id)) {
                 return nodo;
             }
@@ -84,20 +85,22 @@ public class Grafo<T extends Comparable<T>> {
     public ListaSimplementeEnlazada<String> getTiposDeNodos() {
         ListaSimplementeEnlazada<String> resultado = new ListaSimplementeEnlazada<>();
 
-        for (String tipo : tipos) {
+        for (int i = 0; i < tipos.getSize(); i++) {
+            String tipo = tipos.get(i);
             if (!resultado.contains(tipo)) {
                 resultado.addEnd(tipo);
             }
         }
 
-        for (Nodo<T> nodo : nodos) {
+        for (int i = 0; i < nodos.getSize(); i++) {
+            NodoGrafo<T> nodo = nodos.get(i);
             String id = nodo.getId();
 
             if (id.contains(":")) {
                 String tipo = id.substring(0, id.indexOf(":"));
 
                 if (!resultado.contains(tipo)) {
-                    resultado.add(tipo);
+                    resultado.addEnd(tipo);
                 }
             }
         }
@@ -109,7 +112,8 @@ public class Grafo<T extends Comparable<T>> {
     public ListaSimplementeEnlazada<NodoGrafo<T>> getVecinos(NodoGrafo<T> nodo) {
         ListaSimplementeEnlazada<NodoGrafo<T>> vecinos = new ListaSimplementeEnlazada<>();
 
-        for (Arista<T> arista : aristas) {
+        for (int i = 0; i < aristas.getSize(); i++) {
+            Arista<T> arista = aristas.get(i);
             if (arista.getOrigen().equals(nodo)) {
                 vecinos.addEnd(arista.getDestino());
             }
@@ -146,7 +150,8 @@ public class Grafo<T extends Comparable<T>> {
             } else {
                 ListaSimplementeEnlazada<NodoGrafo<T>> vecinos = getVecinos(actual);
 
-                for (NodoGrafo<T> vecino : vecinos) {
+                for (int i = 0; i < vecinos.getSize(); i++) {
+                    NodoGrafo<T> vecino = vecinos.get(i);
                     if (!visitados.contains(vecino)) {
                         visitados.addEnd(vecino);
                         cola.addEnd(vecino);
@@ -162,13 +167,13 @@ public class Grafo<T extends Comparable<T>> {
             return camino;
         }
 
-        NodoGrafo actual = destino;
+        NodoGrafo<T> actual = destino;
 
         while (actual != null) {
-            camino.add(0, actual);
+            camino.addStart(actual);
 
-            int pos = visitados.indexOf(actual);
-            actual = anteriores.get(pos);
+            int posicion = visitados.getPosicion(actual);
+            actual = anteriores.get(posicion);
         }
 
         return camino;
@@ -178,7 +183,8 @@ public class Grafo<T extends Comparable<T>> {
     public ListaSimplementeEnlazada<NodoGrafo<T>> getVecinosNoDirigidos(NodoGrafo<T> nodo) {
         ListaSimplementeEnlazada<NodoGrafo<T>> vecinos = new ListaSimplementeEnlazada<>();
 
-        for (Arista<T> arista : aristas) {
+        for (int i = 0; i < aristas.getSize(); i++) {
+            Arista<T> arista = aristas.get(i);
             if (arista.getOrigen().equals(nodo) && !vecinos.contains(arista.getDestino())) {
                 vecinos.addEnd(arista.getDestino());
             }
@@ -210,7 +216,8 @@ public class Grafo<T extends Comparable<T>> {
             NodoGrafo<T> actual = pendientes.get(indice);
             ListaSimplementeEnlazada<NodoGrafo<T>> vecinos = getVecinosNoDirigidos(actual);
 
-            for (NodoGrafo<T> vecino : vecinos) {
+            for (int i = 0; i < vecinos.getSize(); i++) {
+                NodoGrafo<T> vecino = vecinos.get(i);
                 if (!visitados.contains(vecino)) {
                     visitados.addEnd(vecino);
                     pendientes.addEnd(vecino);
@@ -227,7 +234,8 @@ public class Grafo<T extends Comparable<T>> {
     public ListaSimplementeEnlazada<NodoGrafo<T>> getDestinosPorPredicado(NodoGrafo<T> origen, String predicado) {
         ListaSimplementeEnlazada<NodoGrafo<T>> destinos = new ListaSimplementeEnlazada<>();
 
-        for (Arista<T> arista : aristas) {
+        for (int i = 0; i < aristas.getSize(); i++) {
+            Arista<T> arista = aristas.get(i);
             if (arista.getOrigen().equals(origen) && arista.getPredicado().equals(predicado)) {
                 destinos.addEnd(arista.getDestino());
             }
@@ -240,7 +248,8 @@ public class Grafo<T extends Comparable<T>> {
     public ListaSimplementeEnlazada<NodoGrafo<T>> getOrigenesPorPredicadoYDestino(String predicado, NodoGrafo<T> destino) {
         ListaSimplementeEnlazada<NodoGrafo<T>> origenes = new ListaSimplementeEnlazada<>();
 
-        for (Arista<T> arista : aristas) {
+        for (int i = 0; i < aristas.getSize(); i++) {
+            Arista<T> arista = aristas.get(i);
             if (arista.getPredicado().equals(predicado) && arista.getDestino().equals(destino)) {
                 origenes.addEnd(arista.getOrigen());
             }
@@ -269,7 +278,8 @@ public class Grafo<T extends Comparable<T>> {
 
         ListaSimplementeEnlazada<NodoGrafo<T>> personas = getOrigenesPorPredicadoYDestino("nace_en", lugarNacimiento);
 
-        for (NodoGrafo<T> otraPersona : personas) {
+        for (int i = 0; i < personas.getSize(); i++) {
+            NodoGrafo<T> otraPersona = personas.get(i);
             if (!otraPersona.equals(persona)) {
                 resultado.addEnd(otraPersona);
             }
@@ -279,16 +289,18 @@ public class Grafo<T extends Comparable<T>> {
     }
 
     // Busca fisicos nacidos en la misma ciudad que una persona
-    public List<Nodo> fisicosMismaCiudadQue(String idPersona) {
-        List<Nodo> resultado = new ArrayList<>();
-        List<Nodo> personas = personasMismaCiudadQue(idPersona);
+    public ListaSimplementeEnlazada<NodoGrafo<T>> fisicosMismaCiudadQue(String idPersona) {
+        ListaSimplementeEnlazada<NodoGrafo<T>> resultado = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<NodoGrafo<T>> personas = personasMismaCiudadQue(idPersona);
 
-        for (Nodo persona : personas) {
-            List<Nodo> profesiones = getDestinosPorPredicado(persona, "profesion");
+        for (int i = 0; i < personas.getSize(); i++) {
+            NodoGrafo<T> persona = personas.get(i);
+            ListaSimplementeEnlazada<NodoGrafo<T>> profesiones = getDestinosPorPredicado(persona, "profesion");
 
-            for (Nodo profesion : profesiones) {
+            for (int j = 0; j < profesiones.getSize(); j++) {
+                NodoGrafo<T> profesion = profesiones.get(j);
                 if (profesion.getId().equals("profesion:fisico") || profesion.getId().equals("fisico")) {
-                    resultado.add(persona);
+                    resultado.addEnd(persona);
                     break;
                 }
             }
@@ -300,16 +312,18 @@ public class Grafo<T extends Comparable<T>> {
     // Busca lugares de nacimiento de premios Nobel
     public ListaSimplementeEnlazada<NodoGrafo<T>> lugaresNacimientoPremiosNobel() {
         ListaSimplementeEnlazada<NodoGrafo<T>> lugares = new ListaSimplementeEnlazada<NodoGrafo<T>>();
-        Nodo<T> premioNobel = buscarNodoPorId("premio:Nobel");
+        NodoGrafo<T> premioNobel = buscarNodoPorId("premio:Nobel");
 
-        for (Nodo<T> persona : nodos) {
+        for (int i = 0; i < nodos.getSize(); i++) {
+            NodoGrafo<T> persona = nodos.get(i);
             ListaSimplementeEnlazada<NodoGrafo<T>> premios = getDestinosPorPredicado(persona, "premio");
             ListaSimplementeEnlazada<NodoGrafo<T>> nobelesAntiguos = getDestinosPorPredicado(persona, "premio:Nobel");
 
             if ((premioNobel != null && premios.contains(premioNobel)) || !nobelesAntiguos.isEmpty()) {
                 ListaSimplementeEnlazada<NodoGrafo<T>> nacimientos = getDestinosPorPredicado(persona, "nace_en");
 
-                for (NodoGrafo<T> lugar : nacimientos) {
+                for (int j = 0; j < nacimientos.getSize(); j++) {
+                    NodoGrafo<T> lugar = nacimientos.get(j);
                     if (!lugares.contains(lugar)) {
                         lugares.addEnd(lugar);
                     }

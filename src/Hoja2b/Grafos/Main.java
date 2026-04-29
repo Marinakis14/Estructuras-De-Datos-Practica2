@@ -24,9 +24,9 @@ public class Main {
         System.out.println(grafo.fisicosMismaCiudadQue("persona:Albert Einstein"));
 
         grafo.addArista(
-                new Nodo("persona:Antonio"),
+                new NodoGrafo("persona:Antonio"),
                 "nace_en",
-                new Nodo("lugar:Villarrubia de los Caballeros")
+                new NodoGrafo("lugar:Villarrubia de los Caballeros")
         );
 
         System.out.println("Lugares de nacimiento de los premios Nobel:");
