@@ -2,12 +2,10 @@ package Hoja2b.Grafos;
 
 import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 
-import java.util.List;
-
 public class Grafo<T extends Comparable<T>> {
 
     // Lista de tipos de nodos del grafo
-    private List<String> tipos;
+    private ListaSimplementeEnlazada<String> tipos;
 
     // Lista de nodos del grafo
     private ListaSimplementeEnlazada<NodoGrafo<T>> nodos;
@@ -49,12 +47,12 @@ public class Grafo<T extends Comparable<T>> {
     // Anade un tipo si no existe
     public void addTipo(String tipo) {
         if (!tipos.contains(tipo)) {
-            tipos.add(tipo);
+            tipos.addEnd(tipo);
         }
     }
 
     // Anade un nodo si no existe
-    public void addNodo(Nodo nodo) {
+    public void addNodo(NodoGrafo<T> nodo) {
         if (!nodos.contains(nodo)) {
             nodos.addEnd(nodo);
         }
@@ -83,16 +81,16 @@ public class Grafo<T extends Comparable<T>> {
     }
 
     // Devuelve los tipos de nodos conocidos
-    public List<String> getTiposDeNodos() {
-        List<String> resultado = new ArrayList<>();
+    public ListaSimplementeEnlazada<String> getTiposDeNodos() {
+        ListaSimplementeEnlazada<String> resultado = new ListaSimplementeEnlazada<>();
 
         for (String tipo : tipos) {
             if (!resultado.contains(tipo)) {
-                resultado.add(tipo);
+                resultado.addEnd(tipo);
             }
         }
 
-        for (Nodo nodo : nodos) {
+        for (Nodo<T> nodo : nodos) {
             String id = nodo.getId();
 
             if (id.contains(":")) {
