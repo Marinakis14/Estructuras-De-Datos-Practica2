@@ -79,7 +79,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
             return nodo.getDatos();
         }
         // Si esta vacio
-        return null;
+        return new ListaSimplementeEnlazada<>(); // Devolvemos una lista vacia
     }
 
     // Metodo que devuelve cuantas veces se ha introducido un mismo dato dado el nodo
@@ -420,7 +420,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
             ArbolBinarioDeBusqueda<T> subArbol = new ArbolBinarioDeBusqueda<>(nuevaRaiz);
             return subArbol;
         } else {
-            return null;
+            return new ArbolBinarioDeBusqueda<>(); // Devolvemos un arbol vacio
         }
     }
 
@@ -432,7 +432,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> implements Interfaz
             ArbolBinarioDeBusqueda<T> subArbol = new ArbolBinarioDeBusqueda<>(nuevaRaiz);
             return subArbol;
         } else {
-            return null;
+            return new ArbolBinarioDeBusqueda<>(); // Devolvemos un arbol vacio
         }
     }
 

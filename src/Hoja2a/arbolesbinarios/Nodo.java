@@ -41,11 +41,11 @@ public class Nodo<T extends Comparable<T>> implements Comparable<Nodo<T>> {
         return derecha;
     }
 
-    public void setIzquierda(Nodo<T> izquierda) {
+    protected void setIzquierda(Nodo<T> izquierda) {
         this.izquierda = izquierda;
     }
 
-    public void setDerecha(Nodo<T> derecha) {
+    protected void setDerecha(Nodo<T> derecha) {
         this.derecha = derecha;
     }
 
