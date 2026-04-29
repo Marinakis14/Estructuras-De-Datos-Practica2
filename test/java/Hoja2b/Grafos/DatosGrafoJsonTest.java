@@ -1,70 +1,60 @@
 package Hoja2b.Grafos;
 
+import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DatosGrafoJsonTest {
 
     @Test
-    public void testSetYGetTipos() {
+    public void testGetTripletasInicialmenteNull() {
         DatosGrafoJson datos = new DatosGrafoJson();
-        List<String> tipos = new ArrayList<>();
 
-        tipos.add("persona");
-        tipos.add("lugar");
-        tipos.add("premio");
-
-        datos.setTipos(tipos);
-
-        assertEquals(tipos, datos.getTipos());
-        assertEquals(3, datos.getTipos().size());
-        assertTrue(datos.getTipos().contains("persona"));
-        assertTrue(datos.getTipos().contains("lugar"));
-        assertTrue(datos.getTipos().contains("premio"));
+        assertNull(datos.getTripletas());
     }
 
     @Test
     public void testSetYGetTripletas() {
         DatosGrafoJson datos = new DatosGrafoJson();
-        List<TripletaJson> tripletas = new ArrayList<>();
+        ListaSimplementeEnlazada<TripletaJson> tripletas = new ListaSimplementeEnlazada<>();
 
-        TripletaJson t1 = new TripletaJson();
-        t1.setS("persona:Albert Einstein");
-        t1.setP("nace_en");
-        t1.setO("lugar:Ulm");
+        TripletaJson tripleta1 = new TripletaJson();
+        tripleta1.setS("persona:Albert Einstein");
+        tripleta1.setP("nace_en");
+        tripleta1.setO("lugar:Ulm");
 
-        TripletaJson t2 = new TripletaJson();
-        t2.setS("persona:Albert Einstein");
-        t2.setP("premio:Nobel");
-        t2.setO("1921");
+        TripletaJson tripleta2 = new TripletaJson();
+        tripleta2.setS("persona:Albert Einstein");
+        tripleta2.setP("premio");
+        tripleta2.setO("premio:Nobel");
 
-        tripletas.add(t1);
-        tripletas.add(t2);
+        tripletas.addEnd(tripleta1);
+        tripletas.addEnd(tripleta2);
 
         datos.setTripletas(tripletas);
 
-        assertEquals(tripletas, datos.getTripletas());
-        assertEquals(2, datos.getTripletas().size());
+        assertSame(tripletas, datos.getTripletas());
+        assertEquals(2, datos.getTripletas().getSize());
+
         assertEquals("persona:Albert Einstein", datos.getTripletas().get(0).getS());
         assertEquals("nace_en", datos.getTripletas().get(0).getP());
         assertEquals("lugar:Ulm", datos.getTripletas().get(0).getO());
+
+        assertEquals("persona:Albert Einstein", datos.getTripletas().get(1).getS());
+        assertEquals("premio", datos.getTripletas().get(1).getP());
+        assertEquals("premio:Nobel", datos.getTripletas().get(1).getO());
     }
 
     @Test
-    public void testGetTiposInicialmenteNull() {
+    public void testSetTripletasNull() {
         DatosGrafoJson datos = new DatosGrafoJson();
+        ListaSimplementeEnlazada<TripletaJson> tripletas = new ListaSimplementeEnlazada<>();
 
-        assertNull(datos.getTipos());
-    }
+        datos.setTripletas(tripletas);
+        assertNotNull(datos.getTripletas());
 
-    @Test
-    public void testGetTripletasInicialmenteNull() {
-        DatosGrafoJson datos = new DatosGrafoJson();
-
+        datos.setTripletas(null);
         assertNull(datos.getTripletas());
     }
 }

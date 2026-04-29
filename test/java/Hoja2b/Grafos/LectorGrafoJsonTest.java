@@ -6,7 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +17,13 @@ public class LectorGrafoJsonTest {
 
         String contenidoJson = """
                 {
-                  "tipos": ["tipo", "persona", "premio", "lugar"],
+                  "tipos": [
+                    "persona",
+                    "premio",
+                    "lugar",
+                    "pais",
+                    "profesion"
+                  ],
                   "tripletas": [
                     {
                       "s": "persona:Albert Einstein",
@@ -27,13 +32,13 @@ public class LectorGrafoJsonTest {
                     },
                     {
                       "s": "persona:Albert Einstein",
-                      "p": "premio:Nobel",
-                      "o": "1921"
+                      "p": "premio",
+                      "o": "premio:Nobel"
                     },
                     {
-                      "s": "persona:Antonio",
+                      "s": "persona:Ventura Pacheco",
                       "p": "nace_en",
-                      "o": "lugar:Villarrubia de los Caballeros"
+                      "o": "lugar:Ulm"
                     }
                   ]
                 }
@@ -43,35 +48,44 @@ public class LectorGrafoJsonTest {
             writer.write(contenidoJson);
         }
 
-        Grafo grafo = LectorGrafoJson.cargarDesdeJson(archivoTemporal.toString());
+        Grafo<String> grafo = LectorGrafoJson.cargarDesdeJson(archivoTemporal.toString());
 
         assertNotNull(grafo);
+
+        assertNotNull(grafo.getTipos());
         assertNotNull(grafo.getNodos());
         assertNotNull(grafo.getAristas());
 
-        assertEquals(5, grafo.getNodos().size());
-        assertEquals(3, grafo.getAristas().size());
+        assertTrue(grafo.getTipos().contains("persona"));
+        assertTrue(grafo.getTipos().contains("premio"));
+        assertTrue(grafo.getTipos().contains("lugar"));
+        assertTrue(grafo.getTipos().contains("pais"));
+        assertTrue(grafo.getTipos().contains("profesion"));
+
+        assertEquals(4, grafo.getNodos().getSize());
+        assertEquals(3, grafo.getAristas().getSize());
 
         assertNotNull(grafo.buscarNodoPorId("persona:Albert Einstein"));
         assertNotNull(grafo.buscarNodoPorId("lugar:Ulm"));
-        assertNotNull(grafo.buscarNodoPorId("1921"));
-        assertNotNull(grafo.buscarNodoPorId("persona:Antonio"));
-        assertNotNull(grafo.buscarNodoPorId("lugar:Villarrubia de los Caballeros"));
+        assertNotNull(grafo.buscarNodoPorId("premio:Nobel"));
+        assertNotNull(grafo.buscarNodoPorId("persona:Ventura Pacheco"));
 
-        List<Arista> aristas = grafo.getAristas();
-
-        assertEquals("persona:Albert Einstein", aristas.get(0).getOrigen().getId());
-        assertEquals("nace_en", aristas.get(0).getPredicado());
-        assertEquals("lugar:Ulm", aristas.get(0).getDestino().getId());
+        Arista<String> primera = grafo.getAristas().get(0);
+        assertEquals("persona:Albert Einstein", primera.getOrigen().getId());
+        assertEquals("nace_en", primera.getPredicado());
+        assertEquals("lugar:Ulm", primera.getDestino().getId());
     }
 
     @Test
-    public void testCargarDesdeJsonConRutaIncorrecta() {
-        Grafo grafo = LectorGrafoJson.cargarDesdeJson("archivo_que_no_existe.json");
+    public void testCargarDesdeJsonRutaIncorrecta() {
+        Grafo<String> grafo = LectorGrafoJson.cargarDesdeJson("archivo_que_no_existe.json");
 
         assertNotNull(grafo);
+        assertNotNull(grafo.getTipos());
         assertNotNull(grafo.getNodos());
         assertNotNull(grafo.getAristas());
+
+        assertTrue(grafo.getTipos().isEmpty());
         assertTrue(grafo.getNodos().isEmpty());
         assertTrue(grafo.getAristas().isEmpty());
     }
