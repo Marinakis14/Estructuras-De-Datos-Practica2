@@ -1,25 +1,35 @@
 package Hoja2b.Grafos;
 
-import java.util.Objects;
-
-// Nodo del grafo identificado por un id
-
-public class NodoGrafo<T extends Comparable<T>> implements Comparable<NodoGrafo<T>> {
+// Nodo del grafo identificado por un id y un tipo
+public class NodoGrafo<DN> implements Comparable<NodoGrafo<DN>> {
 
     // Identificador del nodo
-    private String id;
+    private long id;
 
-    // Constructor
-    public NodoGrafo(String id) {
+    // Datos del nodo
+    private DN datos;
+
+    // Constructores
+    protected NodoGrafo(long id, DN datos) {
         this.id = id;
+        this.datos = datos;
     }
 
-    // Getter y setter
-    public String getId() {
+    // Getters y setters
+    protected long getId() {
         return id;
     }
-    public void setId(String id) {
+
+    protected void setId(long id) {
         this.id = id;
+    }
+
+    protected DN getDatos() {
+        return datos;
+    }
+
+    protected void setDatos(DN datos) {
+        this.datos = datos;
     }
 
     // Compara nodos por id
@@ -32,26 +42,19 @@ public class NodoGrafo<T extends Comparable<T>> implements Comparable<NodoGrafo<
             return false;
         }
 
-        NodoGrafo<T> nodo = (NodoGrafo<T>) obj;
+        NodoGrafo<DN> nodo = (NodoGrafo<DN>) obj;
 
-        if (id == null && nodo.id == null) {
-            return true;
-        }
-        if (id == null || nodo.id == null) {
-            return false;
-        }
-
-        return id.equals(nodo.id);
+        return id == nodo.id;
     }
 
     // Devuelve el id como texto
     @Override
     public String toString() {
-        return id;
+        return "ID: " + id + " | Datos: " + (datos != null ? datos.toString() : "vacío");
     }
 
     @Override
     public int compareTo(NodoGrafo otro) {
-        return CharSequence.compare(this.id, otro.id);
+        return Long.compare(this.id, otro.id);
     }
 }

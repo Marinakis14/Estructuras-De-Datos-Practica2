@@ -6,29 +6,29 @@ import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 // Clase que representa los datos del JSON del grafo
 public class DatosGrafoJson {
 
-    // Lista de tipos de nodos
-    private ListaSimplementeEnlazada<String> tipos;
+    // Array de tipos de nodos
+    private String[] tipos;
 
-    // Lista de tripletas (relaciones)
-    private ListaSimplementeEnlazada<TripletaJson> tripletas;
+    // Array de tripletas (relaciones)
+    private TripletaJson[] tripletas;
 
     // Getter de tipos
-    public ListaSimplementeEnlazada<String> getTipos() {
+    public String[] getTipos() {
         return tipos;
     }
 
     // Setter de tipos
-    public void setTipos(ListaSimplementeEnlazada<String> tipos) {
+    public void setTipos(String[] tipos) {
         this.tipos = tipos;
     }
 
     // Getter de tripletas
-    public ListaSimplementeEnlazada<TripletaJson> getTripletas() {
+    public TripletaJson[] getTripletas() {
         return tripletas;
     }
 
     // Setter de tripletas
-    public void setTripletas(ListaSimplementeEnlazada<TripletaJson> tripletas) {
+    public void setTripletas(TripletaJson[] tripletas) {
         this.tripletas = tripletas;
     }
 }
