@@ -17,6 +17,13 @@ public class LectorGrafoJsonTest {
 
         String contenidoJson = """
                 {
+                  "tipos": [
+                    "persona",
+                    "premio",
+                    "lugar",
+                    "pais",
+                    "profesion"
+                  ],
                   "tripletas": [
                     {
                       "s": "persona:Albert Einstein",
@@ -25,13 +32,13 @@ public class LectorGrafoJsonTest {
                     },
                     {
                       "s": "persona:Albert Einstein",
-                      "p": "premio:Nobel",
-                      "o": "1921"
+                      "p": "premio",
+                      "o": "premio:Nobel"
                     },
                     {
-                      "s": "persona:Antonio",
+                      "s": "persona:Ventura Pacheco",
                       "p": "nace_en",
-                      "o": "lugar:Villarrubia de los Caballeros"
+                      "o": "lugar:Ulm"
                     }
                   ]
                 }
@@ -44,17 +51,24 @@ public class LectorGrafoJsonTest {
         Grafo<String> grafo = LectorGrafoJson.cargarDesdeJson(archivoTemporal.toString());
 
         assertNotNull(grafo);
+
+        assertNotNull(grafo.getTipos());
         assertNotNull(grafo.getNodos());
         assertNotNull(grafo.getAristas());
 
-        assertEquals(5, grafo.getNodos().getSize());
+        assertTrue(grafo.getTipos().contains("persona"));
+        assertTrue(grafo.getTipos().contains("premio"));
+        assertTrue(grafo.getTipos().contains("lugar"));
+        assertTrue(grafo.getTipos().contains("pais"));
+        assertTrue(grafo.getTipos().contains("profesion"));
+
+        assertEquals(4, grafo.getNodos().getSize());
         assertEquals(3, grafo.getAristas().getSize());
 
         assertNotNull(grafo.buscarNodoPorId("persona:Albert Einstein"));
         assertNotNull(grafo.buscarNodoPorId("lugar:Ulm"));
-        assertNotNull(grafo.buscarNodoPorId("1921"));
-        assertNotNull(grafo.buscarNodoPorId("persona:Antonio"));
-        assertNotNull(grafo.buscarNodoPorId("lugar:Villarrubia de los Caballeros"));
+        assertNotNull(grafo.buscarNodoPorId("premio:Nobel"));
+        assertNotNull(grafo.buscarNodoPorId("persona:Ventura Pacheco"));
 
         Arista<String> primera = grafo.getAristas().get(0);
         assertEquals("persona:Albert Einstein", primera.getOrigen().getId());
@@ -67,8 +81,11 @@ public class LectorGrafoJsonTest {
         Grafo<String> grafo = LectorGrafoJson.cargarDesdeJson("archivo_que_no_existe.json");
 
         assertNotNull(grafo);
+        assertNotNull(grafo.getTipos());
         assertNotNull(grafo.getNodos());
         assertNotNull(grafo.getAristas());
+
+        assertTrue(grafo.getTipos().isEmpty());
         assertTrue(grafo.getNodos().isEmpty());
         assertTrue(grafo.getAristas().isEmpty());
     }
