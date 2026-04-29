@@ -1,31 +1,55 @@
 package Hoja2b.Grafos;
 
-import com.google.gson.Gson;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class LectorGrafoJson {
 
-    public static Grafo cargarDesdeJson(String ruta) {
-        Grafo grafo = new Grafo();
-        Gson gson = new Gson();
+    public static Grafo<String> cargarDesdeJson(String ruta) {
+        Grafo<String> grafo = new Grafo<>();
 
-        try (FileReader reader = new FileReader(ruta)) {
-            DatosGrafoJson datos = gson.fromJson(reader, DatosGrafoJson.class);
+        try {
+            String contenido = Files.readString(Paths.get(ruta));
+            String[] lineas = contenido.split("\n");
 
-            if (datos.getTipos() != null) {
-                for (String tipo : datos.getTipos()) {
-                    grafo.addTipo(tipo);
+            String s = null;
+            String p = null;
+            String o = null;
+
+            for (int i = 0; i < lineas.length; i++) {
+                String linea = lineas[i].trim();
+
+                if (linea.startsWith("\"s\"")) {
+                    s = sacarValor(linea);
+                } else if (linea.startsWith("\"p\"")) {
+                    p = sacarValor(linea);
+                } else if (linea.startsWith("\"o\"")) {
+                    o = sacarValor(linea);
                 }
-            }
 
-            if (datos.getTripletas() != null) {
-                for (TripletaJson tripleta : datos.getTripletas()) {
-                    Nodo origen = new Nodo(tripleta.getS());
-                    Nodo destino = new Nodo(tripleta.getO());
-                    String predicado = tripleta.getP();
+                if (s != null && p != null && o != null) {
+                    NodoGrafo<String> origen = new NodoGrafo<>(s);
+                    NodoGrafo<String> destino = new NodoGrafo<>(o);
+                    grafo.addArista(origen, p, destino);
 
-                    grafo.addArista(origen, predicado, destino);
+                    s = null;
+                    p = null;
+                    o = null;
+                }
+
+                if (linea.contains("\"tipos\"")) {
+                    while (!linea.contains("]")) {
+                        i++;
+                        linea = lineas[i].trim();
+
+                        if (linea.contains("\"")) {
+                            String tipo = sacarValorTipo(linea);
+                            if (tipo != null && !tipo.equals("")) {
+                                grafo.addTipo(tipo);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -34,5 +58,22 @@ public class LectorGrafoJson {
         }
 
         return grafo;
+    }
+
+    private static String sacarValor(String linea) {
+        int primero = linea.indexOf("\"", linea.indexOf(":")) + 1;
+        int ultimo = linea.lastIndexOf("\"");
+        return linea.substring(primero, ultimo);
+    }
+
+    private static String sacarValorTipo(String linea) {
+        int primero = linea.indexOf("\"") + 1;
+        int ultimo = linea.lastIndexOf("\"");
+
+        if (primero <= 0 || ultimo <= primero) {
+            return "";
+        }
+
+        return linea.substring(primero, ultimo).replace(",", "");
     }
 }

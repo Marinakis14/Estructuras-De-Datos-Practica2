@@ -15,9 +15,9 @@ public class Grafo<T extends Comparable<T>> {
 
     // Constructor
     public Grafo() {
-        ListaSimplementeEnlazada<T> tipos = new ListaSimplementeEnlazada<>();
-        ListaSimplementeEnlazada<T> nodos = new ListaSimplementeEnlazada<>();
-        ListaSimplementeEnlazada<T> aristas = new ListaSimplementeEnlazada<>();
+        this.tipos = new ListaSimplementeEnlazada<>();
+        this.nodos = new ListaSimplementeEnlazada<>();
+        this.aristas = new ListaSimplementeEnlazada<>();
     }
 
     public ListaSimplementeEnlazada<String> getTipos() {
