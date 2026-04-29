@@ -1,5 +1,5 @@
 {
-  "tipos": ["tipo", "persona", "premio", "lugar"],
+  "tipos": ["persona", "premio", "lugar", "pais", "profesion"],
   "tripletas": [
     {
       "s": "persona:Albert Einstein",
@@ -8,13 +8,13 @@
     },
     {
       "s": "persona:Albert Einstein",
-      "p": "premio:Nobel",
-      "o": "1921"
+      "p": "premio",
+      "o": "premio:Nobel"
     },
     {
-      "s": "persona:Marcos Castro",
-      "p": "nace_en",
-      "o": "lugar:Varsovia"
+      "s": "persona:Albert Einstein",
+      "p": "profesion",
+      "o": "profesion:fisico"
     },
     {
       "s": "persona:Ventura Pacheco",
@@ -22,9 +22,39 @@
       "o": "lugar:Ulm"
     },
     {
+      "s": "persona:Ventura Pacheco",
+      "p": "profesion",
+      "o": "profesion:fisico"
+    },
+    {
+      "s": "persona:Marie Curie",
+      "p": "nace_en",
+      "o": "lugar:Varsovia"
+    },
+    {
+      "s": "persona:Marie Curie",
+      "p": "premio",
+      "o": "premio:Nobel"
+    },
+    {
+      "s": "persona:Marie Curie",
+      "p": "profesion",
+      "o": "profesion:fisico"
+    },
+    {
       "s": "persona:Antonio",
       "p": "nace_en",
       "o": "lugar:Villarrubia de los Caballeros"
+    },
+    {
+      "s": "lugar:Ulm",
+      "p": "esta_en",
+      "o": "pais:Alemania"
+    },
+    {
+      "s": "lugar:Varsovia",
+      "p": "esta_en",
+      "o": "pais:Polonia"
     }
   ]
 }

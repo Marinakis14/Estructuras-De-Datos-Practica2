@@ -5,27 +5,39 @@ public class Main {
 
         Grafo grafo = LectorGrafoJson.cargarDesdeJson("datos.json");
 
+        System.out.println("Tipos de nodos:");
+        System.out.println(grafo.getTiposDeNodos());
+
         System.out.println("Nodos:");
         System.out.println(grafo.getNodos());
 
         System.out.println("Aristas:");
         System.out.println(grafo.getAristas());
 
-        System.out.println("Camino mínimo entre Einstein y Ulm:");
-        System.out.println(grafo.caminoMinimo("persona:Albert Einstein", "lugar:Ulm"));
+        System.out.println("Camino minimo entre Einstein y Alemania:");
+        System.out.println(grafo.caminoMinimo("persona:Albert Einstein", "pais:Alemania"));
 
         System.out.println("Personas nacidas en la misma ciudad que Einstein:");
         System.out.println(grafo.personasMismaCiudadQue("persona:Albert Einstein"));
+
+        System.out.println("Fisicos nacidos en la misma ciudad que Einstein:");
+        System.out.println(grafo.fisicosMismaCiudadQue("persona:Albert Einstein"));
+
+        grafo.addArista(
+                new Nodo("persona:Antonio"),
+                "nace_en",
+                new Nodo("lugar:Villarrubia de los Caballeros")
+        );
 
         System.out.println("Lugares de nacimiento de los premios Nobel:");
         System.out.println(grafo.lugaresNacimientoPremiosNobel());
 
         Grafo grafoDisjunto = LectorGrafoJson.cargarDesdeJson("disjunto.json");
-        System.out.println("¿disjunto.json es disjunto?");
+        System.out.println("disjunto.json es disjunto?");
         System.out.println(grafoDisjunto.esDisjunto());
 
         Grafo grafoNoDisjunto = LectorGrafoJson.cargarDesdeJson("nodisjunto.json");
-        System.out.println("¿nodisjunto.json es disjunto?");
+        System.out.println("nodisjunto.json es disjunto?");
         System.out.println(grafoNoDisjunto.esDisjunto());
     }
 }

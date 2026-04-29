@@ -5,6 +5,9 @@ import java.util.List;
 
 public class Grafo {
 
+    // Lista de tipos de nodos del grafo
+    private List<String> tipos;
+
     // Lista de nodos del grafo
     private List<Nodo> nodos;
 
@@ -13,8 +16,17 @@ public class Grafo {
 
     // Constructor
     public Grafo() {
+        tipos = new ArrayList<>();
         nodos = new ArrayList<>();
         aristas = new ArrayList<>();
+    }
+
+    public List<String> getTipos() {
+        return tipos;
+    }
+
+    public void setTipos(List<String> tipos) {
+        this.tipos = tipos;
     }
 
     public List<Nodo> getNodos() {
@@ -33,21 +45,28 @@ public class Grafo {
         this.aristas = aristas;
     }
 
-    // Añade un nodo si no existe
+    // Anade un tipo si no existe
+    public void addTipo(String tipo) {
+        if (!tipos.contains(tipo)) {
+            tipos.add(tipo);
+        }
+    }
+
+    // Anade un nodo si no existe
     public void addNodo(Nodo nodo) {
         if (!nodos.contains(nodo)) {
             nodos.add(nodo);
         }
     }
 
-    // Añade una arista al grafo
+    // Anade una arista al grafo
     public void addArista(Arista arista) {
         addNodo(arista.getOrigen());
         addNodo(arista.getDestino());
         aristas.add(arista);
     }
 
-    // Crea y añade una arista
+    // Crea y anade una arista
     public void addArista(Nodo origen, String predicado, Nodo destino) {
         addArista(new Arista(origen, predicado, destino));
     }
@@ -62,6 +81,31 @@ public class Grafo {
         return null;
     }
 
+    // Devuelve los tipos de nodos conocidos
+    public List<String> getTiposDeNodos() {
+        List<String> resultado = new ArrayList<>();
+
+        for (String tipo : tipos) {
+            if (!resultado.contains(tipo)) {
+                resultado.add(tipo);
+            }
+        }
+
+        for (Nodo nodo : nodos) {
+            String id = nodo.getId();
+
+            if (id.contains(":")) {
+                String tipo = id.substring(0, id.indexOf(":"));
+
+                if (!resultado.contains(tipo)) {
+                    resultado.add(tipo);
+                }
+            }
+        }
+
+        return resultado;
+    }
+
     // Devuelve los vecinos salientes
     public List<Nodo> getVecinos(Nodo nodo) {
         List<Nodo> vecinos = new ArrayList<>();
@@ -74,7 +118,7 @@ public class Grafo {
         return vecinos;
     }
 
-    // Calcula el camino mínimo
+    // Calcula el camino minimo
     public List<Nodo> caminoMinimo(String idOrigen, String idDestino) {
         Nodo origen = buscarNodoPorId(idOrigen);
         Nodo destino = buscarNodoPorId(idDestino);
@@ -95,7 +139,7 @@ public class Grafo {
         int indice = 0;
         boolean encontrado = false;
 
-        while ( indice < cola.size() && !encontrado) {
+        while (indice < cola.size() && !encontrado) {
             Nodo actual = cola.get(indice);
 
             if (actual.equals(destino)) {
@@ -148,7 +192,7 @@ public class Grafo {
         return vecinos;
     }
 
-    // Comprueba si el grafo está separado
+    // Comprueba si el grafo esta separado
     public boolean esDisjunto() {
         if (nodos.isEmpty()) {
             return false;
@@ -193,7 +237,7 @@ public class Grafo {
         return destinos;
     }
 
-    // Busca orígenes por predicado y destino
+    // Busca origenes por predicado y destino
     public List<Nodo> getOrigenesPorPredicadoYDestino(String predicado, Nodo destino) {
         List<Nodo> origenes = new ArrayList<>();
 
@@ -235,14 +279,35 @@ public class Grafo {
         return resultado;
     }
 
+    // Busca fisicos nacidos en la misma ciudad que una persona
+    public List<Nodo> fisicosMismaCiudadQue(String idPersona) {
+        List<Nodo> resultado = new ArrayList<>();
+        List<Nodo> personas = personasMismaCiudadQue(idPersona);
+
+        for (Nodo persona : personas) {
+            List<Nodo> profesiones = getDestinosPorPredicado(persona, "profesion");
+
+            for (Nodo profesion : profesiones) {
+                if (profesion.getId().equals("profesion:fisico") || profesion.getId().equals("fisico")) {
+                    resultado.add(persona);
+                    break;
+                }
+            }
+        }
+
+        return resultado;
+    }
+
     // Busca lugares de nacimiento de premios Nobel
     public List<Nodo> lugaresNacimientoPremiosNobel() {
         List<Nodo> lugares = new ArrayList<>();
+        Nodo premioNobel = buscarNodoPorId("premio:Nobel");
 
         for (Nodo persona : nodos) {
-            List<Nodo> nobeles = getDestinosPorPredicado(persona, "premio:Nobel");
+            List<Nodo> premios = getDestinosPorPredicado(persona, "premio");
+            List<Nodo> nobelesAntiguos = getDestinosPorPredicado(persona, "premio:Nobel");
 
-            if (!nobeles.isEmpty()) {
+            if ((premioNobel != null && premios.contains(premioNobel)) || !nobelesAntiguos.isEmpty()) {
                 List<Nodo> nacimientos = getDestinosPorPredicado(persona, "nace_en");
 
                 for (Nodo lugar : nacimientos) {

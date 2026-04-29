@@ -1,7 +1,5 @@
 package Hoja2b.Grafos;
 
-import java.util.Objects;
-
 // Nodo del grafo identificado por un id
 public class Nodo {
 
@@ -17,6 +15,7 @@ public class Nodo {
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -30,14 +29,17 @@ public class Nodo {
         if (!(obj instanceof Nodo)) {
             return false;
         }
-        Nodo nodo = (Nodo) obj;
-        return Objects.equals(id, nodo.id);
-    }
 
-    // Genera hash basado en id
-    @Override
-    public int hashCode(){
-        return Objects.hash(id);
+        Nodo nodo = (Nodo) obj;
+
+        if (id == null && nodo.id == null) {
+            return true;
+        }
+        if (id == null || nodo.id == null) {
+            return false;
+        }
+
+        return id.equals(nodo.id);
     }
 
     // Devuelve el id como texto
