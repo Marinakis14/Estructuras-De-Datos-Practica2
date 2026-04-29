@@ -1,60 +1,59 @@
 package Hoja2b.Grafos;
 
-import java.util.ArrayList;
-import java.util.List;
+import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 
-public class Grafo {
+public class Grafo<T extends Comparable<T>> {
 
     // Lista de nodos del grafo
-    private List<Nodo> nodos;
+    private ListaSimplementeEnlazada<NodoGrafo<T>> nodos;
 
     // Lista de aristas del grafo
-    private List<Arista> aristas;
+    private ListaSimplementeEnlazada<Arista<T>> aristas;
 
     // Constructor
     public Grafo() {
-        nodos = new ArrayList<>();
-        aristas = new ArrayList<>();
+        ListaSimplementeEnlazada<T> nodos = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<T> aristas = new ListaSimplementeEnlazada<>();
     }
 
-    public List<Nodo> getNodos() {
+    public ListaSimplementeEnlazada<NodoGrafo<T>> getNodos() {
         return nodos;
     }
 
-    public void setNodos(List<Nodo> nodos) {
+    public void setNodos(ListaSimplementeEnlazada<NodoGrafo<T>> nodos) {
         this.nodos = nodos;
     }
 
-    public List<Arista> getAristas() {
+    public ListaSimplementeEnlazada<Arista<T>> getAristas() {
         return aristas;
     }
 
-    public void setAristas(List<Arista> aristas) {
+    public void setAristas(ListaSimplementeEnlazada<Arista<T>> aristas) {
         this.aristas = aristas;
     }
 
     // Añade un nodo si no existe
-    public void addNodo(Nodo nodo) {
+    public void addNodo(NodoGrafo<T> nodo) {
         if (!nodos.contains(nodo)) {
-            nodos.add(nodo);
+            nodos.addEnd(nodo);
         }
     }
 
     // Añade una arista al grafo
-    public void addArista(Arista arista) {
+    public void addArista(Arista<T> arista) {
         addNodo(arista.getOrigen());
         addNodo(arista.getDestino());
-        aristas.add(arista);
+        aristas.addEnd(arista);
     }
 
     // Crea y añade una arista
-    public void addArista(Nodo origen, String predicado, Nodo destino) {
-        addArista(new Arista(origen, predicado, destino));
+    public void addArista(NodoGrafo<T> origen, String predicado, NodoGrafo<T> destino) {
+        addArista(new Arista<>(origen, predicado, destino));
     }
 
     // Busca un nodo por su id
-    public Nodo buscarNodoPorId(String id) {
-        for (Nodo nodo : nodos) {
+    public NodoGrafo<T> buscarNodoPorId(String id) {
+        for (NodoGrafo<T> nodo : nodos) {
             if (nodo.getId().equals(id)) {
                 return nodo;
             }
@@ -63,51 +62,51 @@ public class Grafo {
     }
 
     // Devuelve los vecinos salientes
-    public List<Nodo> getVecinos(Nodo nodo) {
-        List<Nodo> vecinos = new ArrayList<>();
+    public ListaSimplementeEnlazada<NodoGrafo<T>> getVecinos(NodoGrafo<T> nodo) {
+        ListaSimplementeEnlazada<NodoGrafo<T>> vecinos = new ListaSimplementeEnlazada<>();
 
-        for (Arista arista : aristas) {
+        for (Arista<T> arista : aristas) {
             if (arista.getOrigen().equals(nodo)) {
-                vecinos.add(arista.getDestino());
+                vecinos.addEnd(arista.getDestino());
             }
         }
         return vecinos;
     }
 
     // Calcula el camino mínimo
-    public List<Nodo> caminoMinimo(String idOrigen, String idDestino) {
-        Nodo origen = buscarNodoPorId(idOrigen);
-        Nodo destino = buscarNodoPorId(idDestino);
+    public ListaSimplementeEnlazada<NodoGrafo<T>> caminoMinimo(String idOrigen, String idDestino) {
+        NodoGrafo<T> origen = buscarNodoPorId(idOrigen);
+        NodoGrafo<T> destino = buscarNodoPorId(idDestino);
 
-        List<Nodo> camino = new ArrayList<>();
+        ListaSimplementeEnlazada<NodoGrafo<T>> camino = new ListaSimplementeEnlazada<>();
         if (origen == null || destino == null) {
             return camino;
         }
 
-        List<Nodo> cola = new ArrayList<>();
-        List<Nodo> visitados = new ArrayList<>();
-        List<Nodo> anteriores = new ArrayList<>();
+        ListaSimplementeEnlazada<NodoGrafo<T>> cola = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<NodoGrafo<T>> visitados = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<NodoGrafo<T>> anteriores = new ListaSimplementeEnlazada<>();
 
-        cola.add(origen);
-        visitados.add(origen);
-        anteriores.add(null);
+        cola.addEnd(origen);
+        visitados.addEnd(origen);
+        anteriores.addEnd(null);
 
         int indice = 0;
         boolean encontrado = false;
 
-        while ( indice < cola.size() && !encontrado) {
-            Nodo actual = cola.get(indice);
+        while ( indice < cola.getSize() && !encontrado) {
+            NodoGrafo<T> actual = cola.get(indice);
 
             if (actual.equals(destino)) {
                 encontrado = true;
             } else {
-                List<Nodo> vecinos = getVecinos(actual);
+                ListaSimplementeEnlazada<NodoGrafo<T>> vecinos = getVecinos(actual);
 
-                for (Nodo vecino : vecinos) {
+                for (NodoGrafo<T> vecino : vecinos) {
                     if (!visitados.contains(vecino)) {
-                        visitados.add(vecino);
-                        cola.add(vecino);
-                        anteriores.add(actual);
+                        visitados.addEnd(vecino);
+                        cola.addEnd(vecino);
+                        anteriores.addEnd(actual);
                     }
                 }
 
@@ -119,7 +118,7 @@ public class Grafo {
             return camino;
         }
 
-        Nodo actual = destino;
+        NodoGrafo actual = destino;
 
         while (actual != null) {
             camino.add(0, actual);
@@ -132,16 +131,16 @@ public class Grafo {
     }
 
     // Devuelve vecinos en ambos sentidos
-    public List<Nodo> getVecinosNoDirigidos(Nodo nodo) {
-        List<Nodo> vecinos = new ArrayList<>();
+    public ListaSimplementeEnlazada<NodoGrafo<T>> getVecinosNoDirigidos(NodoGrafo<T> nodo) {
+        ListaSimplementeEnlazada<NodoGrafo<T>> vecinos = new ListaSimplementeEnlazada<>();
 
-        for (Arista arista : aristas) {
+        for (Arista<T> arista : aristas) {
             if (arista.getOrigen().equals(nodo) && !vecinos.contains(arista.getDestino())) {
-                vecinos.add(arista.getDestino());
+                vecinos.addEnd(arista.getDestino());
             }
 
             if (arista.getDestino().equals(nodo) && !vecinos.contains(arista.getOrigen())) {
-                vecinos.add(arista.getOrigen());
+                vecinos.addEnd(arista.getOrigen());
             }
         }
 
@@ -154,39 +153,39 @@ public class Grafo {
             return false;
         }
 
-        List<Nodo> visitados = new ArrayList<>();
-        List<Nodo> pendientes = new ArrayList<>();
+        ListaSimplementeEnlazada<NodoGrafo<T>> visitados = new ListaSimplementeEnlazada<>();
+        ListaSimplementeEnlazada<NodoGrafo<T>> pendientes = new ListaSimplementeEnlazada<>();
 
-        Nodo inicio = nodos.get(0);
-        pendientes.add(inicio);
-        visitados.add(inicio);
+        NodoGrafo<T> inicio = nodos.get(0);
+        pendientes.addEnd(inicio);
+        visitados.addEnd(inicio);
 
         int indice = 0;
 
-        while (indice < pendientes.size()) {
-            Nodo actual = pendientes.get(indice);
-            List<Nodo> vecinos = getVecinosNoDirigidos(actual);
+        while (indice < pendientes.getSize()) {
+            NodoGrafo<T> actual = pendientes.get(indice);
+            ListaSimplementeEnlazada<NodoGrafo<T>> vecinos = getVecinosNoDirigidos(actual);
 
-            for (Nodo vecino : vecinos) {
+            for (NodoGrafo<T> vecino : vecinos) {
                 if (!visitados.contains(vecino)) {
-                    visitados.add(vecino);
-                    pendientes.add(vecino);
+                    visitados.addEnd(vecino);
+                    pendientes.addEnd(vecino);
                 }
             }
 
             indice++;
         }
 
-        return visitados.size() != nodos.size();
+        return visitados.getSize() != nodos.getSize();
     }
 
     // Busca destinos por predicado
-    public List<Nodo> getDestinosPorPredicado(Nodo origen, String predicado) {
-        List<Nodo> destinos = new ArrayList<>();
+    public ListaSimplementeEnlazada<NodoGrafo<T>> getDestinosPorPredicado(NodoGrafo<T> origen, String predicado) {
+        ListaSimplementeEnlazada<NodoGrafo<T>> destinos = new ListaSimplementeEnlazada<>();
 
-        for (Arista arista : aristas) {
+        for (Arista<T> arista : aristas) {
             if (arista.getOrigen().equals(origen) && arista.getPredicado().equals(predicado)) {
-                destinos.add(arista.getDestino());
+                destinos.addEnd(arista.getDestino());
             }
         }
 
@@ -194,12 +193,12 @@ public class Grafo {
     }
 
     // Busca orígenes por predicado y destino
-    public List<Nodo> getOrigenesPorPredicadoYDestino(String predicado, Nodo destino) {
-        List<Nodo> origenes = new ArrayList<>();
+    public ListaSimplementeEnlazada<NodoGrafo<T>> getOrigenesPorPredicadoYDestino(String predicado, NodoGrafo<T> destino) {
+        ListaSimplementeEnlazada<NodoGrafo<T>> origenes = new ListaSimplementeEnlazada<>();
 
-        for (Arista arista : aristas) {
+        for (Arista<T> arista : aristas) {
             if (arista.getPredicado().equals(predicado) && arista.getDestino().equals(destino)) {
-                origenes.add(arista.getOrigen());
+                origenes.addEnd(arista.getOrigen());
             }
         }
 
@@ -207,28 +206,28 @@ public class Grafo {
     }
 
     // Busca personas nacidas en la misma ciudad
-    public List<Nodo> personasMismaCiudadQue(String idPersona) {
-        List<Nodo> resultado = new ArrayList<>();
+    public ListaSimplementeEnlazada<NodoGrafo<T>> personasMismaCiudadQue(String idPersona) {
+        ListaSimplementeEnlazada<NodoGrafo<T>> resultado = new ListaSimplementeEnlazada<>();
 
-        Nodo persona = buscarNodoPorId(idPersona);
+        NodoGrafo<T> persona = buscarNodoPorId(idPersona);
 
         if (persona == null) {
             return resultado;
         }
 
-        List<Nodo> lugares = getDestinosPorPredicado(persona, "nace_en");
+        ListaSimplementeEnlazada<NodoGrafo<T>> lugares = getDestinosPorPredicado(persona, "nace_en");
 
         if (lugares.isEmpty()) {
             return resultado;
         }
 
-        Nodo lugarNacimiento = lugares.get(0);
+        NodoGrafo<T> lugarNacimiento = lugares.get(0);
 
-        List<Nodo> personas = getOrigenesPorPredicadoYDestino("nace_en", lugarNacimiento);
+        ListaSimplementeEnlazada<NodoGrafo<T>> personas = getOrigenesPorPredicadoYDestino("nace_en", lugarNacimiento);
 
-        for (Nodo otraPersona : personas) {
+        for (NodoGrafo<T> otraPersona : personas) {
             if (!otraPersona.equals(persona)) {
-                resultado.add(otraPersona);
+                resultado.addEnd(otraPersona);
             }
         }
 
@@ -236,18 +235,18 @@ public class Grafo {
     }
 
     // Busca lugares de nacimiento de premios Nobel
-    public List<Nodo> lugaresNacimientoPremiosNobel() {
-        List<Nodo> lugares = new ArrayList<>();
+    public ListaSimplementeEnlazada<NodoGrafo<T>> lugaresNacimientoPremiosNobel() {
+        ListaSimplementeEnlazada<NodoGrafo<T>> lugares = new ListaSimplementeEnlazada<>();
 
-        for (Nodo persona : nodos) {
-            List<Nodo> nobeles = getDestinosPorPredicado(persona, "premio:Nobel");
+        for (NodoGrafo<T> persona : nodos) {
+            ListaSimplementeEnlazada<NodoGrafo<T>> nobeles = getDestinosPorPredicado(persona, "premio:Nobel");
 
             if (!nobeles.isEmpty()) {
-                List<Nodo> nacimientos = getDestinosPorPredicado(persona, "nace_en");
+                ListaSimplementeEnlazada<NodoGrafo> nacimientos = getDestinosPorPredicado(persona, "nace_en");
 
-                for (Nodo lugar : nacimientos) {
+                for (NodoGrafo<T> lugar : nacimientos) {
                     if (!lugares.contains(lugar)) {
-                        lugares.add(lugar);
+                        lugares.addEnd(lugar);
                     }
                 }
             }

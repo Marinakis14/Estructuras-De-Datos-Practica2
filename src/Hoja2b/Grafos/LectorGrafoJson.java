@@ -38,8 +38,8 @@ public class LectorGrafoJson {
 
                 // Cuando tiene la tripleta completa, crea la arista
                 if (s != null && p != null && o != null) {
-                    Nodo origen = new Nodo(s);
-                    Nodo destino = new Nodo(o);
+                    NodoGrafo origen = new NodoGrafo(s);
+                    NodoGrafo destino = new NodoGrafo(o);
                     grafo.addArista(origen, p, destino);
 
                     // Reinicia para la siguiente tripleta

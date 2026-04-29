@@ -3,13 +3,14 @@ package Hoja2b.Grafos;
 import java.util.Objects;
 
 // Nodo del grafo identificado por un id
-public class Nodo {
+
+public class NodoGrafo<T extends Comparable<T>> implements Comparable<NodoGrafo<T>> {
 
     // Identificador del nodo
     private String id;
 
     // Constructor
-    public Nodo(String id) {
+    public NodoGrafo(String id) {
         this.id = id;
     }
 
@@ -27,10 +28,10 @@ public class Nodo {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof Nodo)) {
+        if (!(obj instanceof NodoGrafo)) {
             return false;
         }
-        Nodo nodo = (Nodo) obj;
+        NodoGrafo nodo = (NodoGrafo) obj;
         return Objects.equals(id, nodo.id);
     }
 
@@ -44,5 +45,10 @@ public class Nodo {
     @Override
     public String toString() {
         return id;
+    }
+
+    @Override
+    public int compareTo(NodoGrafo otro) {
+        return CharSequence.compare(this.id, otro.id);
     }
 }
