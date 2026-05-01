@@ -20,3 +20,16 @@ ellos debería ser de tipo "nace_en" o "vive_en", y no "es_un".
 
 ¿Podríamos crear una ontología para nuestro problema?
 Sí, de hecho, este proyecto esta muy cerca de ser una ontologia.
+
+¿Qué haríamos con ella?
+Validación de Datos: Evitar errores como decir que un "Lugar" nació en una "Persona". El código podría consultar la 
+ontología antes de usar addArista.
+
+Inferencia: Si la ontología dice que "Si X nace en Y, e Y está en Z, entonces X es originario de Z", tu grafo podría 
+deducir que Einstein es alemán aunque no exista una arista directa entre ellos.
+
+Normalización: Asegurarnos de que todos usen "nace_en" y nadie use "nacimiento_lugar", permitiendo que las consultas 
+como personasMismaCiudadQue funcionen siempre correctamente.
+
+Interoperabilidad: Permitir que tu JSON pueda ser leído por otros sistemas que sigan el estándar RDF, facilitando el 
+intercambio de conocimiento.
