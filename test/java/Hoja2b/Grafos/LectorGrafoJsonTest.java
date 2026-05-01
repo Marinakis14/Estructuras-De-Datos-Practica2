@@ -72,7 +72,7 @@ public class LectorGrafoJsonTest {
 
         Arista<String> primera = grafo.getAristas().get(0);
         assertEquals("persona:Albert Einstein", primera.getOrigen().getId());
-        assertEquals("nace_en", primera.getPredicado());
+        assertEquals("nace_en", primera.getDato());
         assertEquals("lugar:Ulm", primera.getDestino().getId());
     }
 

@@ -1,27 +1,25 @@
 package Hoja2b.Grafos;
 
-public class DatoArista implements InterfazDatosGrafo {
-    private String predicado;
+public class DatoArista implements Comparable<DatoArista> {
+    private String dato;
 
     public DatoArista(String predicado) {
-        this.predicado = predicado;
+        this.dato = predicado;
     }
 
-    public String getPredicado() { return predicado; }
+    public String getDato() { return dato; }
 
-    @Override
-    public String getTipo() { return "Relación"; } // O el tipo que prefieras
-
-    @Override
-    public String getNombre() { return predicado; }
-
-    @Override
     public boolean esValido() {
-        return predicado != null && !predicado.isEmpty();
+        return dato != null && !dato.isEmpty();
     }
 
-    @Override
     public String toString() {
-        return "--" + predicado + "-->";
+        return "--(" + dato + ")-->";
+    }
+
+    // Para poder hacer una lista de aristas deben ser comparables
+    @Override
+    public int compareTo(DatoArista o) {
+        return 0;
     }
 }

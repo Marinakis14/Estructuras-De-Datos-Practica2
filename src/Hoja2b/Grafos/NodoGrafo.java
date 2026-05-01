@@ -6,12 +6,15 @@ public class NodoGrafo<DN> implements Comparable<NodoGrafo<DN>> {
     // Identificador del nodo
     private long id;
 
+    // para tener un recuento de los ids y que no se repitan
+    private static long contadorId = 0;
+
     // Datos del nodo
     private DN datos;
 
     // Constructores
-    protected NodoGrafo(long id, DN datos) {
-        this.id = id;
+    protected NodoGrafo(DN datos) {
+        this.id = ++ contadorId;
         this.datos = datos;
     }
 

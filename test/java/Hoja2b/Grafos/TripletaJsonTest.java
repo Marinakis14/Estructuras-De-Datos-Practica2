@@ -21,7 +21,7 @@ public class TripletaJsonTest {
 
         tripleta.setP("nace_en");
 
-        assertEquals("nace_en", tripleta.getP());
+        assertEquals("nace_en", tripleta.getD());
     }
 
     @Test
@@ -38,7 +38,7 @@ public class TripletaJsonTest {
         TripletaJson tripleta = new TripletaJson();
 
         assertNull(tripleta.getS());
-        assertNull(tripleta.getP());
+        assertNull(tripleta.getD());
         assertNull(tripleta.getO());
     }
 
@@ -51,7 +51,7 @@ public class TripletaJsonTest {
         tripleta.setO("1921");
 
         assertEquals("persona:Albert Einstein", tripleta.getS());
-        assertEquals("premio:Nobel", tripleta.getP());
+        assertEquals("premio:Nobel", tripleta.getD());
         assertEquals("1921", tripleta.getO());
     }
 }

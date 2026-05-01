@@ -22,7 +22,7 @@ public class TripletaJson implements Comparable<TripletaJson> {
     }
 
     // Getter y setter de p
-    public String getP() {
+    public String getD() {
         return p;
     }
 

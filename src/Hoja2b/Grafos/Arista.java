@@ -6,20 +6,23 @@ public class Arista<DN, DA> implements Comparable<Arista<DN, DA>> {
     // identificador
     private long id;
 
+    // para tener un recuento de los ids y que no se repitan
+    private static long contadorId = 0;
+
     // Nodo inicial
     private NodoGrafo<DN> origen;
 
     // Tipo de relación
-    private DA predicado;
+    private DA dato;
 
     // Nodo final
     private NodoGrafo<DN> destino;
 
     // Constructor
-    protected Arista(long id, NodoGrafo<DN> origen, DA predicado, NodoGrafo<DN> destino) {
-        this.id = id;
+    protected Arista(NodoGrafo<DN> origen, DA predicado, NodoGrafo<DN> destino) {
+        this.id = ++ contadorId;
         this.origen = origen;
-        this.predicado = predicado;
+        this.dato = predicado;
         this.destino = destino;
     }
 
@@ -34,12 +37,12 @@ public class Arista<DN, DA> implements Comparable<Arista<DN, DA>> {
         this.origen = origen;
     }
 
-    protected DA getPredicado(){
-        return predicado;
+    protected DA getDato(){
+        return dato;
     }
 
-    public void setPredicado(DA predicado) {
-        this.predicado = predicado;
+    public void setDato(DA dato) {
+        this.dato = dato;
     }
 
     public NodoGrafo<DN> getDestino() {
@@ -53,7 +56,7 @@ public class Arista<DN, DA> implements Comparable<Arista<DN, DA>> {
     // Devuelve la arista en formato texto
     @Override
     public String toString(){
-        return "  " + origen.getId() + " --(" + predicado + ")--> " + destino.getId();
+        return "  " + origen.getId() + " --(" + dato + ")--> " + destino.getId();
     }
 
     @Override

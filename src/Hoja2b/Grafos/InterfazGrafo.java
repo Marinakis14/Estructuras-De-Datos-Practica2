@@ -10,12 +10,6 @@ public interface InterfazGrafo<DN, DA> {
 
     ListaSimplementeEnlazada<String> getTipos();
 
-    void setTipos(ListaSimplementeEnlazada<String> tipos);
-
-    void setNodos(ListaSimplementeEnlazada<NodoGrafo<DN>> nodos);
-
-    void setAristas(ListaSimplementeEnlazada<Arista<DN, DA>> aristas);
-
     // -- Metodos para añadir cosas al grafo --
     void addNodo(NodoGrafo<DN> nodo);
 
@@ -48,9 +42,9 @@ public interface InterfazGrafo<DN, DA> {
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> getOrigenesPorPredicadoYDestino(DA predicado, NodoGrafo<DN> destino);
 
-    ListaSimplementeEnlazada<NodoGrafo<DN>> personasMismaCiudadQue(long idPersona);
+    ListaSimplementeEnlazada<NodoGrafo<DN>> personasMismaCiudadQue(String tipoPersona);
 
-    ListaSimplementeEnlazada<NodoGrafo<DN>> fisicosMismaCiudadQue(long idPersona);
+    ListaSimplementeEnlazada<NodoGrafo<DN>> fisicosMismaCiudadQue(String tipoPersona);
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> lugaresNacimientoPremiosNobel();
 

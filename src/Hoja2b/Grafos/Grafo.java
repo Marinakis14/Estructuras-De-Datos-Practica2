@@ -2,7 +2,7 @@ package Hoja2b.Grafos;
 
 import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 
-public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN, DA> {
+public class Grafo<DN,DA> implements InterfazGrafo<DN, DA> {
 
     // Lista de nodos del grafo
     private ListaSimplementeEnlazada<NodoGrafo<DN>> nodos;
@@ -10,20 +10,14 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
     // Lista de aristas del grafo
     private ListaSimplementeEnlazada<Arista<DN, DA>> aristas;
 
-    // Lista de tipos únicos encontrados (Añadido)
+    // Lista de tipos de los nodos
     private ListaSimplementeEnlazada<String> tipos;
-
-    // Contadores para los ids de los nodos y las aristas
-    private long contadorNodos;
-    private long contadorAristas;
 
     // Constructor
     public Grafo() {
         this.nodos = new ListaSimplementeEnlazada<>();
         this.aristas = new ListaSimplementeEnlazada<>();
         this.tipos = new ListaSimplementeEnlazada<>();
-        this.contadorNodos = 0;
-        this.contadorAristas = 0;
     }
 
     // Getters y Setters
@@ -33,29 +27,13 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
     }
 
     @Override
-    public void setNodos(ListaSimplementeEnlazada<NodoGrafo<DN>> nodos) {
-        this.nodos = nodos;
-    }
-
-    @Override
     public ListaSimplementeEnlazada<Arista<DN, DA>> getAristas() {
         return aristas;
     }
 
     @Override
-    public void setAristas(ListaSimplementeEnlazada<Arista<DN, DA>> aristas) {
-        this.aristas = aristas;
-    }
-
-
-    @Override
     public ListaSimplementeEnlazada<String> getTipos() {
         return tipos;
-    }
-
-    @Override
-    public void setTipos(ListaSimplementeEnlazada<String> tipos) {
-        this.tipos = tipos;
     }
 
     // Añade un nodo si no existe
@@ -64,10 +42,15 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
         if (nodo != null && !nodos.contains(nodo)) {
             nodos.addEnd(nodo);
 
+            // aprovechamos para añadir el tipo del nodo
             if (nodo.getDatos() instanceof DatoNodo) {
                 addTipo(((DatoNodo) nodo.getDatos()).getTipo());
             }
         }
+    }
+
+    public void addNodo(DN datos) {
+        addNodo(new NodoGrafo<>(datos));
     }
 
     // Añade una arista al grafo
@@ -82,8 +65,8 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
 
     // Crea y añade una arista
     @Override
-    public void addArista(NodoGrafo<DN> origen, DA predicado, NodoGrafo<DN> destino) {
-        addArista(new Arista<>(contadorAristas++, origen, predicado, destino));
+    public void addArista(NodoGrafo<DN> origen, DA dato, NodoGrafo<DN> destino) {
+        addArista(new Arista<>(origen, dato, destino));
     }
 
     // Añade un tipo al grafo
@@ -97,6 +80,32 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
         }
         // si no estaba lo añadimos
         tipos.addEnd(tipo);
+    }
+
+    // Metodo que devuelve una lista solamente con los nodos que cumplen la propiedad especial del json
+    // es decir que tienen tipo y nombre -> usamos la interfaz que hemos creado para garantizar que cumplen esto
+    public ListaSimplementeEnlazada<DatoNodo> getNodosValidos() {
+        ListaSimplementeEnlazada<DatoNodo> listaEspecial = new ListaSimplementeEnlazada<>();
+        for (int i = 0; i < nodos.getSize(); i++) {
+            NodoGrafo<DN> nodo = nodos.get(i);
+            if (nodo.getDatos() instanceof DatoNodo) { // si los datos cumplen con la estructura
+                listaEspecial.addEnd((DatoNodo) nodo.getDatos());
+            }
+        }
+        return listaEspecial;
+    }
+
+    // Mismo metodo para las aristas
+    public ListaSimplementeEnlazada<DatoArista> getAristasValidas() {
+        ListaSimplementeEnlazada<DatoArista> listaEspecial = new ListaSimplementeEnlazada<>();
+        for (int i = 0; i < aristas.getSize(); i++) {
+            Arista<DN, DA> arista = aristas.get(i);
+            if (arista.getDato() instanceof DatoArista && arista.getOrigen().getDatos() instanceof DatoNodo && arista.getDestino().getDatos() instanceof DatoNodo) {
+                // tiene que cumplirse que los nodos que conecta sean validos y el dato que lleva tambien
+                listaEspecial.addEnd((DatoArista) arista.getDato());
+            }
+        }
+        return listaEspecial;
     }
 
     // Busca un nodo por su id
@@ -130,9 +139,11 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
     public NodoGrafo<DN> buscarNodoPorNombre(String nombreBusqueda) {
         for (int i = 0; i < nodos.getSize(); i++) {
             NodoGrafo<DN> nodo = nodos.get(i);
-            // Usamos toString() de los datos para ver si coinciden con lo que buscamos
-            if (nodo.getDatos().toString().equalsIgnoreCase(nombreBusqueda)) {
-                return nodo;
+            // Comprobamos que tiene un nombre mirando si es del tipo DatoNodo
+            if (nodo.getDatos() instanceof DatoNodo) {
+                if (((DatoNodo) nodo.getDatos()).getNombre().equals(nombreBusqueda)) {
+                    return nodo;
+                }
             }
         }
         return null;
@@ -179,35 +190,43 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
         NodoGrafo<DN> origen = buscarNodoPorId(idOrigen);
         NodoGrafo<DN> destino = buscarNodoPorId(idDestino);
 
+        // Si alguno de los datos no esta no se puede hacer un camino entre ambos
         ListaSimplementeEnlazada<NodoGrafo<DN>> camino = new ListaSimplementeEnlazada<>();
         if (origen == null || destino == null) {
             return camino;
         }
 
-        ListaSimplementeEnlazada<NodoGrafo<DN>> cola = new ListaSimplementeEnlazada<>();
+        // Vamos a hacer una busqueda en anchura para encontrar el camino minimo
+        // Lista para gestionar el orden de busqueda
+        ListaSimplementeEnlazada<NodoGrafo<DN>> nodosPorExplorar = new ListaSimplementeEnlazada<>();
+        // Lista para saber que nodos se han visitado ya y no entrar en bucles
         ListaSimplementeEnlazada<NodoGrafo<DN>> visitados = new ListaSimplementeEnlazada<>();
+        // Lista para reconstruir el camino si encontramos el nodo destino
         ListaSimplementeEnlazada<NodoGrafo<DN>> anteriores = new ListaSimplementeEnlazada<>();
 
-        cola.addEnd(origen);
+        nodosPorExplorar.addEnd(origen);
         visitados.addEnd(origen);
         anteriores.addEnd(null);
 
         int indice = 0;
         boolean encontrado = false;
 
-        while ( indice < cola.getSize() && !encontrado) {
-            NodoGrafo<DN> actual = cola.get(indice);
+        // El bucle termina si encontramos el dato o si ya no quedan mas nodos por explorar
+        while ( indice < nodosPorExplorar.getSize() && !encontrado) {
+            NodoGrafo<DN> actual = nodosPorExplorar.get(indice);
 
+            // Si encontramos el destino terminamos el bucle
             if (actual.equals(destino)) {
                 encontrado = true;
-            } else {
+            } else { // sino exploramos todos los vecinos
                 ListaSimplementeEnlazada<NodoGrafo<DN>> vecinos = getVecinos(actual);
 
+                // Hay que asegurarse que no repitamos los nodos por los que ya hemos pasado
                 for (int i = 0; i < vecinos.getSize(); i++) {
                     NodoGrafo<DN> vecino = vecinos.get(i);
                     if (!visitados.contains(vecino)) {
-                        visitados.addEnd(vecino);
-                        cola.addEnd(vecino);
+                        visitados.addEnd(vecino); // añadimos el nodo a visitados
+                        nodosPorExplorar.addEnd(vecino); // lo metemos en la nodosPorExplorar para gestionarlo mas tarde
                         anteriores.addEnd(actual);
                     }
                 }
@@ -216,6 +235,7 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
             }
         }
 
+        // Si hemos encontrado el nodo destino reconstruimos el camino
         if (encontrado) {
             NodoGrafo<DN> pasoActual = destino;
             while (pasoActual != null) {
@@ -255,7 +275,7 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
                 vecinos.addEnd(arista.getDestino());
             }
 
-            if (arista.getOrigen().getId() == nodo.getId() && !vecinos.contains(arista.getOrigen())) {
+            if (arista.getDestino().getId() == nodo.getId() && !vecinos.contains(arista.getOrigen())) {
                 vecinos.addEnd(arista.getOrigen());
             }
         }
@@ -270,6 +290,7 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
             return false;
         }
 
+        // Creamos dos listas de nuevo para hacer una busqueda en anchura
         ListaSimplementeEnlazada<NodoGrafo<DN>> visitados = new ListaSimplementeEnlazada<>();
         ListaSimplementeEnlazada<NodoGrafo<DN>> pendientes = new ListaSimplementeEnlazada<>();
 
@@ -279,13 +300,16 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
 
         int indice = 0;
 
+        // Seguimos hasta que nos quedemos sin nodos por explorar
         while (indice < pendientes.getSize()) {
             NodoGrafo<DN> actual = pendientes.get(indice);
             ListaSimplementeEnlazada<NodoGrafo<DN>> vecinos = getVecinosNoDirigidos(actual);
 
+            // Comprobamos que los nodos de la busqueda en anchura no los habiamos explorado antes
             for (int i = 0; i < vecinos.getSize(); i++) {
                 NodoGrafo<DN> vecino = vecinos.get(i);
                 if (!visitados.contains(vecino)) {
+                    // Si no los habiamos visitado los añadimos a ambas listas
                     visitados.addEnd(vecino);
                     pendientes.addEnd(vecino);
                 }
@@ -294,39 +318,45 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
             indice++;
         }
 
+        // Si el numero total de nodos visitados en el bucle coincide con los nodos totales es que todos estan conectados
+        // si no coincide es porque hay algun nodo al que no se ha llegado porque no estaba conectado con el grupo de
+        // nodos que exploramos y por tanto el grafo es disjunto
         return visitados.getSize() != nodos.getSize();
     }
 
-    // Busca destinos por predicado
+    // Busca destinos por dato
     @Override
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> getDestinosPorPredicado(NodoGrafo<DN> origen, DA predicado) {
+    public ListaSimplementeEnlazada<NodoGrafo<DN>> getDestinosPorPredicado(NodoGrafo<DN> origen, DA dato) {
         ListaSimplementeEnlazada<NodoGrafo<DN>> destinos = new ListaSimplementeEnlazada<>();
 
+        // Añade a la lista todos los nodos que esten conectados al nodo origen por un dato especifico
         for (int i = 0; i < aristas.getSize(); i++) {
             Arista<DN, DA> arista = aristas.get(i);
-            if (arista.getOrigen().getId() == origen.getId()) {
-                if (arista.getPredicado().equals(predicado)) {
-                    destinos.addEnd(arista.getDestino());
+            if (arista.getOrigen().getId() == origen.getId()) { // si el nodo es igual
+                if (arista.getDato().equals(dato)) { // Y el dato es el que buscamos
+                    destinos.addEnd(arista.getDestino()); // lo añadimos a la lista
                 }
             }
         }
 
         return destinos;
     }
+
     // Mismo metodo para cuando se introduce un String
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> getDestinosPorPredicado(NodoGrafo<DN> origen, String predicadoStr) {
-        return getDestinosPorPredicado(origen, (DA) predicadoStr);
+    public ListaSimplementeEnlazada<NodoGrafo<DN>> getDestinosPorPredicado(NodoGrafo<DN> origen, String dato) {
+        return getDestinosPorPredicado(origen, (DA) dato);
     }
 
-    // Busca orígenes por predicado y destino
+    // Busca orígenes por dato y destino
     @Override
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> getOrigenesPorPredicadoYDestino(DA predicado, NodoGrafo<DN> destino) {
+    public ListaSimplementeEnlazada<NodoGrafo<DN>> getOrigenesPorPredicadoYDestino(DA dato, NodoGrafo<DN> destino) {
         ListaSimplementeEnlazada<NodoGrafo<DN>> origenes = new ListaSimplementeEnlazada<>();
 
+        // Mismo metodo que antes pero teniendo el destino en vez de el origen
         for (int i = 0; i < aristas.getSize(); i++) {
             Arista<DN, DA> arista = aristas.get(i);
             if (arista.getDestino().getId() == destino.getId()) {
-                if (arista.getPredicado().equals(predicado)) {
+                if (arista.getDato().equals(dato)) {
                     origenes.addEnd(arista.getOrigen());
                 }
             }
@@ -336,16 +366,16 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
     }
 
     // Mismo metodo para cuando se introduce un String
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> getOrigenesPorPredicadoYDestino(String predicadostr, NodoGrafo<DN> destino) {
-        return getOrigenesPorPredicadoYDestino((DA) predicadostr, destino);
+    public ListaSimplementeEnlazada<NodoGrafo<DN>> getOrigenesPorPredicadoYDestino(String dato, NodoGrafo<DN> destino) {
+        return getOrigenesPorPredicadoYDestino((DA) dato, destino);
     }
 
     // Busca personas nacidas en la misma ciudad
     @Override
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> personasMismaCiudadQue(long idPersona) {
+    public ListaSimplementeEnlazada<NodoGrafo<DN>> personasMismaCiudadQue(String tipoPersona) {
         ListaSimplementeEnlazada<NodoGrafo<DN>> resultado = new ListaSimplementeEnlazada<>();
 
-        NodoGrafo<DN> persona = buscarNodoPorId(idPersona);
+        NodoGrafo<DN> persona = buscarNodoPorTipo(tipoPersona);
 
         if (persona == null) {
             return resultado;
@@ -371,27 +401,14 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
         return resultado;
     }
 
-    // Mismo metodo para cuando introducen String
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> personasMismaCiudadQue(String idPersona) {
-        // Buscamos el nodo por su nombre/dato
-        NodoGrafo<DN> nodo = buscarNodoPorNombre(idPersona);
-
-        // Si ambos existen, usamos sus IDs para llamar al metodo principal
-        if (nodo != null) {
-            return personasMismaCiudadQue(nodo.getId());
-        }
-
-        // Si alguno no existe, devolvemos lista vacía
-        System.err.println("No se encontró alguno el nodo: " + idPersona);
-        return new ListaSimplementeEnlazada<>();
-    }
-
     // Busca fisicos nacidos en la misma ciudad que una persona
     @Override
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> fisicosMismaCiudadQue(long idPersona) {
+    public ListaSimplementeEnlazada<NodoGrafo<DN>> fisicosMismaCiudadQue(String tipoPersona) {
         ListaSimplementeEnlazada<NodoGrafo<DN>> resultado = new ListaSimplementeEnlazada<>();
-        ListaSimplementeEnlazada<NodoGrafo<DN>> personas = personasMismaCiudadQue(idPersona);
+        // Reutilizamos el metodo de antes
+        ListaSimplementeEnlazada<NodoGrafo<DN>> personas = personasMismaCiudadQue(tipoPersona);
 
+        // Comprobamos cuantas de esas personas son fisicos
         for (int i = 0; i < personas.getSize(); i++) {
             NodoGrafo<DN> persona = personas.get(i);
             ListaSimplementeEnlazada<NodoGrafo<DN>> profesiones = getDestinosPorPredicado(persona, "profesion");
@@ -407,21 +424,6 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
         }
 
         return resultado;
-    }
-
-    // Mismo metodo para cuando introduces un String
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> fisicosMismaCiudadQue(String idPersona) {
-        // Buscamos el nodo por su nombre/dato
-        NodoGrafo<DN> nodo = buscarNodoPorNombre(idPersona);
-
-        // Si ambos existen, usamos sus IDs para llamar al metodo principal
-            if (nodo != null) {
-            return fisicosMismaCiudadQue(nodo.getId());
-        }
-
-        // Si alguno no existe, devolvemos lista vacía
-            System.err.println("No se encontró alguno el nodo: " + idPersona);
-            return new ListaSimplementeEnlazada<>();
     }
 
     // Busca lugares de nacimiento de premios Nobel
@@ -455,13 +457,20 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
     public String toString() {
         String resultado = "=== GRAFO DE CONOCIMIENTO ===\n";
 
+        // Mostramos el numero de tipos que hay
+        resultado += "TIPOS (" + this.tipos.getSize() + "):\n";
+        // Mostramos cada tipo
+        for (int i = 0; i < tipos.getSize(); i++) {
+            resultado += "  * " + tipos.get(i) + "\n";
+        }
+
         // Mostramos el numero de nodos
-        resultado += "NODOS (" + this.nodos.getSize() + "):\n";
+        resultado += "\nNODOS (" + this.nodos.getSize() + "):\n";
         // Mostramos la informacion de cada nodo
         for (int i = 0; i < nodos.getSize(); i++) {
             NodoGrafo<DN> n = nodos.get(i);
             // Suponiendo que el tipo y el id son Strings
-            resultado += "  • " + n.toString() + n.getId() + "\n";
+            resultado += "  * " + n.toString() + "\n";
         }
 
         // Hacemos lo mismo con las aristas
@@ -470,7 +479,7 @@ public class Grafo<DN extends InterfazDatosGrafo,DA> implements InterfazGrafo<DN
         for (int i = 0; i < aristas.getSize(); i++) {
             Arista<DN, DA> a = aristas.get(i);
             // Formato: Sujeto --(Predicado)--> Objeto
-            resultado += "  " + a.getOrigen().getId() + " --(" + a.getPredicado() + ")--> " + a.getDestino().getId() + "\n";
+            resultado += "  " + a.getOrigen().getId() + a.getDato() + a.getDestino().getId() + "\n";
         }
 
         resultado += "=============================";

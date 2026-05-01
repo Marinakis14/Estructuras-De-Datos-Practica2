@@ -13,7 +13,7 @@ public class AristaTest {
         Arista arista = new Arista(origen, "nace_en", destino);
 
         assertEquals(origen, arista.getOrigen());
-        assertEquals("nace_en", arista.getPredicado());
+        assertEquals("nace_en", arista.getDato());
         assertEquals(destino, arista.getDestino());
     }
 
@@ -35,9 +35,9 @@ public class AristaTest {
         NodoGrafo destino = new NodoGrafo("lugar:Ulm");
         Arista arista = new Arista(origen, "nace_en", destino);
 
-        arista.setPredicado("vive_en");
+        arista.setDato("vive_en");
 
-        assertEquals("vive_en", arista.getPredicado());
+        assertEquals("vive_en", arista.getDato());
     }
 
     @Test

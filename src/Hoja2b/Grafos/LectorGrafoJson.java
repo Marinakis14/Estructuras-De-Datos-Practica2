@@ -1,15 +1,14 @@
 package Hoja2b.Grafos;
 
 import com.google.gson.Gson;
-import com.google.gson.internal.bind.util.ISO8601Utils;
 
 import java.io.FileReader;
 import java.io.IOException;
 
 public class LectorGrafoJson {
 
-    public static Grafo<String, String> cargarDesdeJson(String ruta) {
-        Grafo<String, String> grafo = new Grafo<String, String>();
+    public static Grafo<DatoNodo, DatoArista> cargarDesdeJson(String ruta) {
+        Grafo<DatoNodo, DatoArista> grafo = new Grafo<>();
         Gson gson = new Gson();
 
         try (FileReader reader = new FileReader(ruta)) {
@@ -23,34 +22,38 @@ public class LectorGrafoJson {
             if (datos.getTripletas() != null) {
                 for (TripletaJson tripleta : datos.getTripletas()) {
                     // Tenemos que tener en cuenta que todos los datos tienen el formato
-                    // 's': "tipo: id"
-                    // 'p': "id"
-                    // 'o': "tipo: id"
+                    // 's': "tipo: nombre"
+                    // 'p': "dato"
+                    // 'o': "tipo: nombre"
 
-                    // Vemos primero el sujeto
+                    // Vemos primero el origen
                     String[] partesS = tripleta.getS().split(":"); // separamos ambos terminos
                     String tipoS = partesS[0];
-                    String idS = partesS[1];
+                    String nombreS = partesS[1];
 
-                    // miramos el id, si ya estaba usamos el que ya teniamos, si no estaba creamos uno nuevo
-                    NodoGrafo<String> sujeto = grafo.buscarNodoPorId(idS);
-                    if (sujeto == null) { // si no estaba
-                        sujeto = new NodoGrafo<>(idS, tipoS);
-                        grafo.addNodo(sujeto); // añadimos el nodo al grafo
+                    // miramos el nombre, si ya estaba usamos el que ya teniamos, si no estaba creamos uno nuevo
+                    NodoGrafo<DatoNodo> origen = grafo.buscarNodoPorNombre(nombreS);
+                    if (origen == null) { // si no estaba
+                        DatoNodo dato1 = new DatoNodo(nombreS, tipoS);
+                        origen = new NodoGrafo<>(dato1);
                     }
-                    // Hacemos lo mismo con el origen
+                    grafo.addNodo(origen); // añadimos el nodo al grafo
+
+                    // Hacemos lo mismo con el destino
                     String[] partesO = tripleta.getO().split(":"); // separamos ambos terminos
                     String tipoO = partesO[0];
-                    String idO = partesO[1];
+                    String nombreO = partesO[1];
 
-                    NodoGrafo<String> origen = grafo.buscarNodoPorId(idO);
-                    if (origen == null) { // si no estaba
-                        origen = new NodoGrafo<>(idO, tipoO);
-                        grafo.addNodo(origen); // añadimos el nodo al grafo
+                    NodoGrafo<DatoNodo> destino = grafo.buscarNodoPorNombre(nombreO);
+                    if (destino == null) { // si no estaba
+                        DatoNodo dato2 = new DatoNodo(nombreO, tipoO);
+                        destino = new NodoGrafo<>(dato2);
                     }
+                    grafo.addNodo(destino); // añadimos el nodo al grafo
+
                     // Por ultimo creamos la arista conectando ambos nodos
-                    String predicado = tripleta.getP();
-                    grafo.addArista(sujeto,predicado,origen);
+                    DatoArista dato = new DatoArista(tripleta.getD());
+                    grafo.addArista(origen,dato,destino);
                 }
             }
 
