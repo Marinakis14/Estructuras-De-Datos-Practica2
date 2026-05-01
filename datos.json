@@ -42,11 +42,6 @@
       "o": "profesion:fisico"
     },
     {
-      "s": "persona:Antonio",
-      "p": "nace_en",
-      "o": "lugar:Villarrubia de los Caballeros"
-    },
-    {
       "s": "lugar:Ulm",
       "p": "esta_en",
       "o": "pais:Alemania"

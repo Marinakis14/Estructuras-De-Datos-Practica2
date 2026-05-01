@@ -1,6 +1,6 @@
 package Hoja2b.Grafos;
 
-public class DatoNodo implements Comparable<DatoNodo> {
+public class DatoNodo implements InterfazDatosNodo {
     private String nombre;
     private String tipo;
 
@@ -18,6 +18,7 @@ public class DatoNodo implements Comparable<DatoNodo> {
         return "[" + tipo.toUpperCase() + "] " + nombre;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof DatoNodo)) return false;
@@ -27,7 +28,7 @@ public class DatoNodo implements Comparable<DatoNodo> {
 
     // Para poder hacer una listaSimplementeEnlazada tienen que ser comparables
     @Override
-    public int compareTo(DatoNodo o) {
+    public int compareTo(InterfazDatosNodo o) {
         return 0;
     }
 }

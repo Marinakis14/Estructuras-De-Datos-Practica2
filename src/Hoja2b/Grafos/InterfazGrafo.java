@@ -34,6 +34,8 @@ public interface InterfazGrafo<DN, DA> {
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimo(long idOrigen, long idDestino);
 
+    ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimoAmbosSentidos(long idOrigen, long idDestino);
+
     ListaSimplementeEnlazada<NodoGrafo<DN>> getVecinosNoDirigidos(NodoGrafo<DN> nodo);
 
     boolean esDisjunto();

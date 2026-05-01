@@ -42,8 +42,6 @@ public class ListaSimplementeEnlazada<T extends Comparable<T>> implements Interf
     // Metodo para añadir un elemento al final de la lista
     @Override
     public void addEnd(T dato) {
-        if (dato == null) return; // Evita que se añada un dato vacio a la lista, que no tendria sentido
-
         NodoListaSE<T> nuevoElemento = new NodoListaSE<>(dato);
 
         // Comprobar si la lista esta vacia

@@ -1,6 +1,6 @@
 package Hoja2b.Grafos;
 
-public class DatoArista implements Comparable<DatoArista> {
+public class DatoArista implements InterfazDatosArista {
     private String dato;
 
     public DatoArista(String predicado) {
@@ -14,12 +14,20 @@ public class DatoArista implements Comparable<DatoArista> {
     }
 
     public String toString() {
-        return "--(" + dato + ")-->";
+        return dato;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof DatoArista)) return false;
+        DatoArista otro = (DatoArista) obj;
+        return dato.equals(otro.dato);
     }
 
     // Para poder hacer una lista de aristas deben ser comparables
     @Override
-    public int compareTo(DatoArista o) {
+    public int compareTo(InterfazDatosArista o) {
         return 0;
     }
 }
