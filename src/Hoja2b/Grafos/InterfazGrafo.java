@@ -13,11 +13,17 @@ public interface InterfazGrafo<DN, DA> {
     // -- Metodos para añadir cosas al grafo --
     void addNodo(NodoGrafo<DN> nodo);
 
+    void addNodo(DN datos);
+
     void addArista(Arista<DN, DA> arista);
 
     void addArista(NodoGrafo<DN> origen, DA predicado, NodoGrafo<DN> destino);
 
     void addTipo(String tipo);
+
+    ListaSimplementeEnlazada<InterfazDatosNodo> getNodosValidos();
+
+    ListaSimplementeEnlazada<InterfazDatosArista> getAristasValidas();
 
     // -- Metodos para trabajar con el grafo --
     NodoGrafo<DN> buscarNodoPorId(long id);
@@ -36,19 +42,31 @@ public interface InterfazGrafo<DN, DA> {
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimoAmbosSentidos(long idOrigen, long idDestino);
 
+    String mostrarIdsCamino(ListaSimplementeEnlazada<NodoGrafo<DN>> camino);
+
+    ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimo(String nombreOrigen, String nombreDestino);
+
+    ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimoAmbosSentidos(String nombreOrigen, String nombreDestino);
+
     ListaSimplementeEnlazada<NodoGrafo<DN>> getVecinosNoDirigidos(NodoGrafo<DN> nodo);
 
     boolean esDisjunto();
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> getDestinosPorPredicado(NodoGrafo<DN> origen, DA predicado);
 
+    ListaSimplementeEnlazada<NodoGrafo<DN>> getDestinosPorPredicado(NodoGrafo<DN> origen, String dato);
+
     ListaSimplementeEnlazada<NodoGrafo<DN>> getOrigenesPorPredicadoYDestino(DA predicado, NodoGrafo<DN> destino);
+
+    ListaSimplementeEnlazada<NodoGrafo<DN>> getOrigenesPorPredicadoYDestino(String dato, NodoGrafo<DN> destino);
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> personasMismaCiudadQue(String tipoPersona);
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> fisicosMismaCiudadQue(String tipoPersona);
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> lugaresNacimientoPremiosNobel();
+
+    ListaSimplementeEnlazada<NodoGrafo<DN>> Dijkstra(NodoGrafo<DN> nodo);
 
     String toString();
 }

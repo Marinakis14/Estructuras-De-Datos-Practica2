@@ -56,6 +56,7 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
         }
     }
 
+    @Override
     public void addNodo(DN datos) {
         addNodo(new NodoGrafo<>(datos));
     }
@@ -102,6 +103,7 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
 
     // Metodo que devuelve una lista solamente con los nodos que cumplen la propiedad especial del json
     // es decir que tienen tipo y nombre -> usamos la interfaz que hemos creado para garantizar que cumplen esto
+    @Override
     public ListaSimplementeEnlazada<InterfazDatosNodo> getNodosValidos() {
         ListaSimplementeEnlazada<InterfazDatosNodo> listaEspecial = new ListaSimplementeEnlazada<>();
         for (int i = 0; i < nodos.getSize(); i++) {
@@ -114,6 +116,7 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
     }
 
     // Mismo metodo para las aristas
+    @Override
     public ListaSimplementeEnlazada<InterfazDatosArista> getAristasValidas() {
         ListaSimplementeEnlazada<InterfazDatosArista> listaEspecial = new ListaSimplementeEnlazada<>();
         for (int i = 0; i < aristas.getSize(); i++) {
@@ -345,6 +348,7 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
     }
 
     // Metodo para mostrar el camino solo con los ids
+    @Override
     public String mostrarIdsCamino(ListaSimplementeEnlazada<NodoGrafo<DN>> camino) {
         String ids = "";
         for (int i = 0; i < camino.getSize(); i++) {
@@ -358,6 +362,7 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
     }
 
     // Mismo metodo para cuando introducen Strings
+    @Override
     public ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimo(String nombreOrigen, String nombreDestino) {
         // Buscamos los nodos por su nombre/dato
         NodoGrafo<DN> nodoO = buscarNodoPorNombre(nombreOrigen);
@@ -374,6 +379,7 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
     }
 
     // Mismo metodo para cuando introducen Strings
+    @Override
     public ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimoAmbosSentidos(String nombreOrigen, String nombreDestino) {
         // Buscamos los nodos por su nombre/dato
         NodoGrafo<DN> nodoO = buscarNodoPorNombre(nombreOrigen);
@@ -468,6 +474,7 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
     }
 
     // Mismo metodo para cuando se introduce un String
+    @Override
     public ListaSimplementeEnlazada<NodoGrafo<DN>> getDestinosPorPredicado(NodoGrafo<DN> origen, String dato) {
         return getDestinosPorPredicado(origen, (DA) dato);
     }
@@ -491,6 +498,7 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
     }
 
     // Mismo metodo para cuando se introduce un String
+    @Override
     public ListaSimplementeEnlazada<NodoGrafo<DN>> getOrigenesPorPredicadoYDestino(String dato, NodoGrafo<DN> destino) {
         return getOrigenesPorPredicadoYDestino((DA) dato, destino);
     }
@@ -575,6 +583,15 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
         }
 
         return lugares;
+    }
+
+    @Override
+    public ListaSimplementeEnlazada<NodoGrafo<DN>> Dijkstra(NodoGrafo<DN> nodo) {
+        /**
+         * No nos ha dado tiempo a terminar esta parte pero nos gustaria añadirla en un futuro y por eso no hemos
+         * borrado la estructura
+         */
+        return null;
     }
 
     // Metodo que devuelve una cadena de texto para poder visualizar el grafo

@@ -1,7 +1,6 @@
 package Hoja2b.Grafos;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NodoTest {
@@ -10,16 +9,17 @@ public class NodoTest {
     public void testConstructorYGetId() {
         NodoGrafo<String> nodo = new NodoGrafo<>("persona:Albert Einstein");
 
-        assertEquals("persona:Albert Einstein", nodo.getId());
+        assertTrue(nodo.getId() > 0);
+        assertEquals("persona:Albert Einstein", nodo.getDatos());
     }
 
     @Test
     public void testSetId() {
         NodoGrafo<String> nodo = new NodoGrafo<>("persona:Albert Einstein");
 
-        nodo.setId("persona:Marie Curie");
+        nodo.setId(500L);
 
-        assertEquals("persona:Marie Curie", nodo.getId());
+        assertEquals(500L, nodo.getId());
     }
 
     @Test
@@ -41,6 +41,8 @@ public class NodoTest {
         NodoGrafo<String> nodo1 = new NodoGrafo<>("persona:Albert Einstein");
         NodoGrafo<String> nodo2 = new NodoGrafo<>("persona:Albert Einstein");
 
+        nodo2.setId(nodo1.getId());
+
         assertEquals(nodo1, nodo2);
     }
 
@@ -53,17 +55,9 @@ public class NodoTest {
     }
 
     @Test
-    public void testEqualsConIdNullEnAmbos() {
+    public void testEqualsConDatosNull() {
         NodoGrafo<String> nodo1 = new NodoGrafo<>(null);
         NodoGrafo<String> nodo2 = new NodoGrafo<>(null);
-
-        assertEquals(nodo1, nodo2);
-    }
-
-    @Test
-    public void testEqualsConUnIdNullYOtroNo() {
-        NodoGrafo<String> nodo1 = new NodoGrafo<>(null);
-        NodoGrafo<String> nodo2 = new NodoGrafo<>("persona:Albert Einstein");
 
         assertNotEquals(nodo1, nodo2);
     }
@@ -72,13 +66,16 @@ public class NodoTest {
     public void testToString() {
         NodoGrafo<String> nodo = new NodoGrafo<>("persona:Albert Einstein");
 
-        assertEquals("persona:Albert Einstein", nodo.toString());
+        String resultado = nodo.toString();
+        assertTrue(resultado.contains("ID:"));
+        assertTrue(resultado.contains("persona:Albert Einstein"));
     }
 
     @Test
     public void testCompareToIguales() {
         NodoGrafo<String> nodo1 = new NodoGrafo<>("persona:Albert Einstein");
         NodoGrafo<String> nodo2 = new NodoGrafo<>("persona:Albert Einstein");
+        nodo2.setId(nodo1.getId());
 
         assertEquals(0, nodo1.compareTo(nodo2));
     }
@@ -88,6 +85,6 @@ public class NodoTest {
         NodoGrafo<String> nodo1 = new NodoGrafo<>("persona:Albert Einstein");
         NodoGrafo<String> nodo2 = new NodoGrafo<>("persona:Marie Curie");
 
-        assertTrue(nodo1.compareTo(nodo2) < 0 || nodo1.compareTo(nodo2) > 0);
+        assertTrue(nodo1.compareTo(nodo2) < 0);
     }
 }

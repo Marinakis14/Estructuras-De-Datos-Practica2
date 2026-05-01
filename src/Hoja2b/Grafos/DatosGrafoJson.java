@@ -6,10 +6,10 @@ import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 // Clase que representa los datos del JSON del grafo
 public class DatosGrafoJson {
 
-    // Array de tipos de nodos
+    // Lista de tipos de nodos
     private String[] tipos;
 
-    // Array de tripletas (relaciones)
+    // Lista de tripletas (relaciones)
     private TripletaJson[] tripletas;
 
     // Getter de tipos

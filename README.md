@@ -12,5 +12,3 @@
 ## Lenguaje: java
 
 ## Entorno: IntelliJ
-
-## Descripción

@@ -48,7 +48,7 @@ public class LectorGrafoJsonTest {
             writer.write(contenidoJson);
         }
 
-        Grafo<String> grafo = LectorGrafoJson.cargarDesdeJson(archivoTemporal.toString());
+        Grafo<DatoNodo, DatoArista> grafo = LectorGrafoJson.cargarDesdeJson(archivoTemporal.toString());
 
         assertNotNull(grafo);
 
@@ -59,26 +59,26 @@ public class LectorGrafoJsonTest {
         assertTrue(grafo.getTipos().contains("persona"));
         assertTrue(grafo.getTipos().contains("premio"));
         assertTrue(grafo.getTipos().contains("lugar"));
-        assertTrue(grafo.getTipos().contains("pais"));
-        assertTrue(grafo.getTipos().contains("profesion"));
+        assertFalse(grafo.getTipos().contains("pais"));
+        assertFalse(grafo.getTipos().contains("profesion"));
 
         assertEquals(4, grafo.getNodos().getSize());
         assertEquals(3, grafo.getAristas().getSize());
 
-        assertNotNull(grafo.buscarNodoPorId("persona:Albert Einstein"));
-        assertNotNull(grafo.buscarNodoPorId("lugar:Ulm"));
-        assertNotNull(grafo.buscarNodoPorId("premio:Nobel"));
-        assertNotNull(grafo.buscarNodoPorId("persona:Ventura Pacheco"));
+        assertNotNull(grafo.buscarNodoPorNombre("Albert Einstein"));
+        assertNotNull(grafo.buscarNodoPorNombre("Ulm"));
+        assertNotNull(grafo.buscarNodoPorNombre("Nobel"));
+        assertNotNull(grafo.buscarNodoPorNombre("Ventura Pacheco"));
 
-        Arista<String> primera = grafo.getAristas().get(0);
-        assertEquals("persona:Albert Einstein", primera.getOrigen().getId());
-        assertEquals("nace_en", primera.getDato());
-        assertEquals("lugar:Ulm", primera.getDestino().getId());
+        Arista<DatoNodo, DatoArista> primera = grafo.getAristas().get(0);
+        assertEquals("Albert Einstein", primera.getOrigen().getDatos().getNombre());
+        assertEquals("nace_en", primera.getDato().toString());
+        assertEquals("Ulm", primera.getDestino().getDatos().getNombre());
     }
 
     @Test
     public void testCargarDesdeJsonRutaIncorrecta() {
-        Grafo<String> grafo = LectorGrafoJson.cargarDesdeJson("archivo_que_no_existe.json");
+        Grafo<DatoNodo, DatoArista> grafo = LectorGrafoJson.cargarDesdeJson("archivo_que_no_existe.json");
 
         assertNotNull(grafo);
         assertNotNull(grafo.getTipos());

@@ -18,5 +18,4 @@ class ArbolBinarioDeBusquedaEquilibradoTest {
         arbol.delNodo(4);
         assertEquals("[ [ 5 ] ]\n[ [ 2 ] ]\n",arbol.toString());
     }
-
 }

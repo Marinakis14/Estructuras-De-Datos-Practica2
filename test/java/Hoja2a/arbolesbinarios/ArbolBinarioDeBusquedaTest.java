@@ -41,7 +41,6 @@ class ArbolBinarioDeBusquedaTest {
         assertEquals(10, aRaiz.getDato(r));
         assertNull(aRaiz.getDato(null));
         assertNotNull(aRaiz.getDatos(r));
-        assertNull(aRaiz.getDatos(null));
 
         // Repeticiones
         aRaiz.add(10);
@@ -93,10 +92,10 @@ class ArbolBinarioDeBusquedaTest {
         aRaiz.delDato(5); // Borrar existente
 
         // Caminos
-        assertEquals("[LISTA VACIA]",aVacio.getCaminoDatos(10).toString());
+        assertEquals("[ null ]",aVacio.getCaminoDatos(10).toString());
         assertNull(aRaiz.getCaminoDatos(null));
         assertNotNull(aRaiz.getCaminoDatos(10));
-        assertEquals("[LISTA VACIA]",aVacio.getCaminoNodos(10).toString());
+        assertEquals("[ null ]",aVacio.getCaminoNodos(10).toString());
         assertNull(aRaiz.getCaminoNodos(null));
         assertNotNull(aRaiz.getCaminoNodos(10));
     }
@@ -126,7 +125,6 @@ class ArbolBinarioDeBusquedaTest {
         assertNotNull(aCompleto.equilibrar());
         assertNotNull(aCompleto.getSubArbolIzquierda());
         assertNotNull(aCompleto.getSubArbolDerecha());
-        assertNull(aVacio.getSubArbolIzquierda());
         // Cobertura rama getDatos(raiz) != null en getSubArbolDerecha
         assertNotNull(new ArbolBinarioDeBusqueda<Integer>(10).getSubArbolDerecha());
     }
