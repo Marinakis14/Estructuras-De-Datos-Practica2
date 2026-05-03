@@ -16,7 +16,7 @@ public class DatoAristaConPeso implements InterfazAristasConPeso{
     }
 
     public String toString() {
-        return "[peso: " + peso + "dato: " + dato + "]";
+        return "[peso: " + peso + ", dato: " + dato + "]";
     }
 
     @Override

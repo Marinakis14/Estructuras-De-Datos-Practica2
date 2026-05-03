@@ -1,6 +1,6 @@
 package Hoja2b.Grafos;
 
-import MisEstructurasDeDatos.ListaSimplementeEnlazada;
+import MisEstructurasDeDatos.*;
 
 public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
 
@@ -361,6 +361,72 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
         return ids;
     }
 
+    // Metodo para mostrar el camino solo con los datos
+    @Override
+    public String mostrarDatosCamino(ListaSimplementeEnlazada<NodoGrafo<DN>> camino) {
+        String datos = "";
+        for (int i = 0; i < camino.getSize(); i++) {
+            if (i != camino.getSize() - 1) {
+                datos += camino.get(i).getDatos() + " -> ";
+            } else {
+                datos += camino.get(i).getDatos();
+            }
+        }
+        return datos;
+    }
+
+    // Metodo para mostrar el camino con los datos de los nodos y las aristas
+    @Override
+    public String mostrarDatosNodosYAristasCamino(ListaSimplementeEnlazada<NodoGrafo<DN>> camino) {
+        String datos = "";
+        NodoGrafo<DN> nodoAnterior = null;
+        for (int i = 0; i < camino.getSize(); i++) {
+            Arista<DN, DA> aristaActual = null;
+            if (nodoAnterior != null) {
+                // Cogemos la arista que conecta ambos nodos excepto para el primer nodo
+                aristaActual = getAristaPorNodos(nodoAnterior, camino.get(i));
+            }
+            if (aristaActual == null) {
+                if (i != camino.getSize() - 1) {
+                    datos += camino.get(i).getDatos() + " -> ";
+                } else {
+                    datos += camino.get(i).getDatos();
+                }
+            } else {
+                if (i != camino.getSize() - 1) {
+                    datos += camino.get(i).getDatos() + " --(" + aristaActual.getDato() + ")--> ";
+                } else {
+                    datos += camino.get(i).getDatos();
+                }
+            }
+            nodoAnterior = camino.get(i);
+        }
+        return datos;
+    }
+
+    // Metodo especifico para mostrar la informacion de las aristas del ejemplo de Dijkstra
+    public String mostrarCaminoPruebaDijkstra(ListaSimplementeEnlazada<NodoGrafo<DN>> camino) {
+        String datos = "";
+        for (int i = 0; i < camino.getSize(); i++) {
+            Arista<DN, DA> aristaActual = null;
+
+            // Cogemos la arista que conecta ambos nodos excepto para el ultimo nodo que no esta conectado con nadie
+            if (i != camino.getSize()) {
+                aristaActual = getAristaPorNodos(camino.get(i), camino.get(i + 1));
+            }
+
+            if (aristaActual == null) {
+                datos += camino.get(i).getDatos();
+            } else {
+                if (aristaActual.getDato() instanceof DatoAristaConPeso) {
+                    datos += camino.get(i).getDatos() + " --[ " + ((DatoAristaConPeso) aristaActual.getDato()).getDato() +
+                            "(" + ((DatoAristaConPeso) aristaActual.getDato()).getPeso() + ")" + " ]--> ";
+                }
+            }
+        }
+        return datos;
+    }
+
     // Mismo metodo para cuando introducen Strings
     @Override
     public ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimo(String nombreOrigen, String nombreDestino) {
@@ -453,6 +519,20 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
         // si no coincide es porque hay algun nodo al que no se ha llegado porque no estaba conectado con el grupo de
         // nodos que exploramos y por tanto el grafo es disjunto
         return visitados.getSize() != nodos.getSize();
+    }
+
+    @Override
+    public Arista<DN, DA> getAristaPorNodos(NodoGrafo<DN> origen, NodoGrafo<DN> destino) {
+        for (int i = 0; i < aristas.getSize(); i++) {
+            Arista<DN, DA> arista = aristas.get(i);
+            if (arista.getOrigen().equals(origen) && arista.getDestino().equals(destino)) {
+                return arista;
+            } else if (arista.getOrigen().equals(destino) && arista.getDestino().equals(origen)) { // si la arista esta en el otro sentido tambien vale
+                return arista;
+            }
+        }
+        // Si no hemos encontrado la arista devolvemos null
+        return null;
     }
 
     // Busca destinos por dato
@@ -586,11 +666,81 @@ public class Grafo<DN, DA> implements InterfazGrafo<DN, DA> {
     }
 
     @Override
-    public ListaSimplementeEnlazada<NodoGrafo<DN>> Dijkstra(NodoGrafo<DN> nodo) {
-        /**
-         * No nos ha dado tiempo a terminar esta parte pero nos gustaria añadirla en un futuro y por eso no hemos
-         * borrado la estructura
-         */
+    public ListaSimplementeEnlazada<NodoGrafo<DN>> Dijkstra(NodoGrafo<DN> origen, NodoGrafo<DN> destino) {
+        // 1. Inicialización
+        ListaSimplementeEnlazada<DatoDijkstra<DN>> tabla = new ListaSimplementeEnlazada<>();
+        for (int i = 0; i < nodos.getSize(); i++) {
+            DatoDijkstra<DN> estado = new DatoDijkstra<>(nodos.get(i));
+            if (estado.nodo.equals(origen)) estado.distancia = 0;
+            tabla.addEnd(estado);
+        }
+
+        // 2. Cálculo
+        for (int i = 0; i < nodos.getSize(); i++) {
+            DatoDijkstra<DN> actual = buscarMinimoNoVisitado(tabla);
+
+            // Si no hay más nodos alcanzables, terminamos
+            if (actual == null || actual.distancia == Integer.MAX_VALUE) break;
+
+            actual.visitado = true;
+
+            // Si ya llegamos al destino paramos
+            if (actual.nodo.equals(destino)) break;
+
+            ListaSimplementeEnlazada<NodoGrafo<DN>> vecinos = getVecinosNoDirigidos(actual.nodo);
+            for (int j = 0; j < vecinos.getSize(); j++) {
+                NodoGrafo<DN> nodoVecino = vecinos.get(j);
+                DatoDijkstra<DN> vecinoEstado = buscarEstado(tabla, nodoVecino);
+
+                Arista<DN, DA> aristaActual = getAristaPorNodos(actual.nodo, nodoVecino);
+
+                if (aristaActual != null && !vecinoEstado.visitado) {
+                    int peso = ((DatoAristaConPeso) aristaActual.getDato()).getPeso();
+                    int nuevaDist = actual.distancia + peso;
+
+                    if (nuevaDist < vecinoEstado.distancia) {
+                        vecinoEstado.distancia = nuevaDist;
+                        vecinoEstado.padre = actual.nodo;
+                    }
+                }
+            }
+        }
+        return reconstruirCamino(tabla, destino);
+    }
+
+    private ListaSimplementeEnlazada<NodoGrafo<DN>> reconstruirCamino(ListaSimplementeEnlazada<DatoDijkstra<DN>> tabla, NodoGrafo<DN> destino) {
+        ListaSimplementeEnlazada<NodoGrafo<DN>> camino = new ListaSimplementeEnlazada<>();
+        DatoDijkstra<DN> actual = buscarEstado(tabla, destino);
+
+        // Si el destino es inalcanzable
+        if (actual == null || (actual.padre == null && !(actual.distancia == 0))) {
+            return camino; // Devuelve lista vacía
+        }
+
+        // Vamos hacia atrás usando los 'padre'
+        while (actual != null) {
+            camino.addStart(actual.nodo); // Insertar al principio para que quede en orden origen -> destino
+            actual = buscarEstado(tabla, actual.padre);
+        }
+
+        return camino;
+    }
+
+    private DatoDijkstra<DN> buscarMinimoNoVisitado(ListaSimplementeEnlazada<DatoDijkstra<DN>> tabla) {
+        DatoDijkstra<DN> menor = null;
+        for (int i = 0; i < tabla.getSize(); i++) {
+            DatoDijkstra<DN> e = tabla.get(i);
+            if (!e.visitado && (menor == null || e.distancia < menor.distancia)) {
+                menor = e;
+            }
+        }
+        return menor;
+    }
+
+    private DatoDijkstra<DN> buscarEstado(ListaSimplementeEnlazada<DatoDijkstra<DN>> tabla, NodoGrafo<DN> nodo) {
+        for (int i = 0; i < tabla.getSize(); i++) {
+            if (tabla.get(i).nodo.equals(nodo)) return tabla.get(i);
+        }
         return null;
     }
 

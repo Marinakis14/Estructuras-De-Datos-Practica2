@@ -1,5 +1,6 @@
 package Hoja2b.Grafos;
 
+import Hoja2a.arbolesbinarios.Nodo;
 import MisEstructurasDeDatos.ListaSimplementeEnlazada;
 
 public interface InterfazGrafo<DN, DA> {
@@ -44,6 +45,10 @@ public interface InterfazGrafo<DN, DA> {
 
     String mostrarIdsCamino(ListaSimplementeEnlazada<NodoGrafo<DN>> camino);
 
+    String mostrarDatosCamino(ListaSimplementeEnlazada<NodoGrafo<DN>> camino);
+
+    String mostrarDatosNodosYAristasCamino(ListaSimplementeEnlazada<NodoGrafo<DN>> camino);
+
     ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimo(String nombreOrigen, String nombreDestino);
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> caminoMinimoAmbosSentidos(String nombreOrigen, String nombreDestino);
@@ -51,6 +56,8 @@ public interface InterfazGrafo<DN, DA> {
     ListaSimplementeEnlazada<NodoGrafo<DN>> getVecinosNoDirigidos(NodoGrafo<DN> nodo);
 
     boolean esDisjunto();
+
+    Arista<DN, DA> getAristaPorNodos(NodoGrafo<DN> origen, NodoGrafo<DN> destino);
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> getDestinosPorPredicado(NodoGrafo<DN> origen, DA predicado);
 
@@ -66,7 +73,7 @@ public interface InterfazGrafo<DN, DA> {
 
     ListaSimplementeEnlazada<NodoGrafo<DN>> lugaresNacimientoPremiosNobel();
 
-    ListaSimplementeEnlazada<NodoGrafo<DN>> Dijkstra(NodoGrafo<DN> nodo);
+    ListaSimplementeEnlazada<NodoGrafo<DN>> Dijkstra(NodoGrafo<DN> origen, NodoGrafo<DN> destino);
 
     String toString();
 }

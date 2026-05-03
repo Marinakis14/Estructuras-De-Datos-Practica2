@@ -1,5 +1,7 @@
 package Hoja2b.Grafos;
 
+import MisEstructurasDeDatos.ListaSimplementeEnlazada;
+
 public class PruebaDijkstra {
     static void main(String[] args) {
         // Generamos un grafo para probar Dijkstra
@@ -63,9 +65,60 @@ public class PruebaDijkstra {
         DatoAristaConPeso a66_bad_sev = new DatoAristaConPeso(215, "A-66");
         grafo.addArista(new Arista<>(badajoz, a66_bad_sev, sevilla));
 
-        /**
-         * No nos ha dado tiempo a terminar esta parte pero nos gustaria añadirla en un futuro y por eso no hemos
-         * borrado la estructura
-         */
+        System.out.println(grafo);
+
+        ListaSimplementeEnlazada<NodoGrafo<String>> camino1 = grafo.Dijkstra(madrid, barcelona);
+        System.out.println(grafo.mostrarIdsCamino(camino1));
+        System.out.println(grafo.mostrarDatosCamino(camino1));
+        System.out.println(grafo.mostrarCaminoPruebaDijkstra(camino1));
+        System.out.println();
+
+        ListaSimplementeEnlazada<NodoGrafo<String>> camino2 = grafo.Dijkstra(badajoz, valladolid);
+        System.out.println(grafo.mostrarIdsCamino(camino2));
+        System.out.println(grafo.mostrarDatosCamino(camino2));
+        System.out.println(grafo.mostrarCaminoPruebaDijkstra(camino2));
+        System.out.println();
+
+        System.out.println("== TODOS LOS CAMINOS DESDE MADRID ==");
+        for (int i = 0; i < grafo.getNodos().getSize(); i++) {
+            if (!grafo.getNodos().get(i).getDatos().equals("Madrid")) {
+                ListaSimplementeEnlazada<NodoGrafo<String>> caminoActual = grafo.Dijkstra(madrid, grafo.getNodos().get(i));
+                System.out.println(grafo.mostrarIdsCamino(caminoActual));
+                System.out.println(grafo.mostrarDatosCamino(caminoActual));
+                System.out.println(grafo.mostrarCaminoPruebaDijkstra(caminoActual));
+                System.out.println();
+            }
+        }
+        System.out.println("====================================");
+        System.out.println();
+
+        // Añadimos un camino mas largo desde Madrid a Malaga pero cuyo peso total es menor para comprobar si el
+        // metodo funciona bien realmente
+
+        // --- RUTA DIRECTA (Cara: 735 km) ---
+        // Madrid -> Sevilla -> Malaga
+
+        // --- RUTA LARGA PERO BARATA (Barata: 505 km) ---
+        // Madrid -> Valladolid (Ya la tenemos: 190 km)
+        // De Valladolid a Zaragoza (un tramo pequeño ficticio)
+        DatoAristaConPeso valla_zar = new DatoAristaConPeso(50, "Ruta-Ficticia-1");
+        grafo.addArista(new Arista<>(valladolid, valla_zar, zaragoza));
+
+        // De Zaragoza a Valencia (otro tramo pequeño)
+        DatoAristaConPeso zar_val = new DatoAristaConPeso(50, "Ruta-Ficticia-2");
+        grafo.addArista(new Arista<>(zaragoza, zar_val, valencia));
+
+        // De Valencia a Málaga (el tramo final)
+        DatoAristaConPeso val_mal = new DatoAristaConPeso(115, "Ruta-Ficticia-3");
+        grafo.addArista(new Arista<>(valencia, val_mal, malaga));
+
+        System.out.println(grafo);
+
+        System.out.println("== CAMINO A MALAGA TRAS AÑADIR LA RUTA MAS LARGA PERO DE MENOS PESO ==");
+        ListaSimplementeEnlazada<NodoGrafo<String>> caminoNuevo = grafo.Dijkstra(madrid, malaga);
+        System.out.println(grafo.mostrarIdsCamino(caminoNuevo));
+        System.out.println(grafo.mostrarDatosCamino(caminoNuevo));
+        System.out.println(grafo.mostrarCaminoPruebaDijkstra(caminoNuevo));
+        System.out.println();
     }
 }
