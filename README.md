@@ -17,6 +17,7 @@
 Dentro de las carpetas correspondientes del arbol binario de búsqueda y del grafo, se encuentran diagramas UML mas 
 elaborados junto con las clases main y las clases de prueba que no aparecen en este diagrama.
 
+```mermaid
 classDiagram
 direction TB
 
@@ -151,3 +152,4 @@ direction TB
     DatosGrafoJson "1" *-- "n" TripletaJson
     LectorGrafoJson ..> Grafo : crea
     LectorGrafoJson ..> DatosGrafoJson : lee
+```
