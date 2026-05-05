@@ -20,7 +20,10 @@ elaborados junto con las clases main y las clases de prueba que no aparecen en e
 ```mermaid
 %%{init: {'theme': 'neutral'}}%%
 classDiagram
-direction TB
+    direction TB
+
+    %% 1. DEFINICIÓN MANUAL DEL ESTILO (Fondo blanco, borde negro)
+    classDef cleanNode fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000;
 
     %% ARBOL
 
@@ -60,20 +63,14 @@ direction TB
         }
     }
 
-    %% Relaciones Estructurales
-    ArbolBinarioDeBusqueda "1" o-- "0..1" Nodo : raiz
-    Nodo "1" o-- "0..1" Nodo : izquierda
-    Nodo "1" o-- "0..1" Nodo : derecha
-    Nodo "1" *-- "1" ListaSimplementeEnlazada : almacena datos
+    %% Relaciones Estructurales (Árbol)
+    ArbolBinarioDeBusqueda "1" o-- "0..1" Nodo
+    Nodo "1" o-- "0..1" Nodo
+    Nodo "1" o-- "0..1" Nodo
+    Nodo "1" *-- "1" ListaSimplementeEnlazada
     
-    %% Relaciones de Dependencia (para dar robustez al diagrama)
     ArbolBinarioDeBusqueda ..> ListaSimplementeEnlazada : genera resultados
     ListaSimplementeEnlazada "1" *-- "n" Elemento : contiene
-```
-```mermaid
-%%{init: {'theme': 'neutral'}}%%
-classDiagram
-direction TB
 
     %% GRAFO
 
@@ -101,7 +98,6 @@ direction TB
         class Grafo {
             -Lista~NodoGrafo~ nodos
             -Lista~Arista~ aristas
-            -Lista~String~ tipos
         }
     
         class NodoGrafo {
@@ -133,8 +129,6 @@ direction TB
         class DatoDijkstra {
             +NodoGrafo nodo
             +int distancia
-            +NodoGrafo padre
-            +boolean visitado
         }
     
         class DatosGrafoJson {
@@ -149,7 +143,7 @@ direction TB
         }
     }
 
-    %% Relaciones Estructurales
+    %% Relaciones Estructurales (Grafo)
     Grafo "1" *-- "n" NodoGrafo
     Grafo "1" *-- "n" Arista
     Arista "n" o-- "1" NodoGrafo : origen
@@ -158,4 +152,8 @@ direction TB
     DatosGrafoJson "1" *-- "n" TripletaJson
     LectorGrafoJson ..> Grafo : crea
     LectorGrafoJson ..> DatosGrafoJson : lee
+
+    %% 2. APLICACIÓN MANUAL DEL ESTILO A CADA CLASE
+    class InterfazArbol,ArbolBinarioDeBusqueda,ArbolBinarioDeBusquedaEquilibrado,Nodo,ListaSimplementeEnlazada,Elemento cleanNode;
+    class InterfazGrafo,InterfazDatosNodo,InterfazDatosArista,InterfazAristasConPeso,Grafo,NodoGrafo,Arista,DatoNodo,DatoArista,DatoAristaConPeso,DatoDijkstra,DatosGrafoJson,TripletaJson cleanNode;
 ```
