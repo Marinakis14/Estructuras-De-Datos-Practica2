@@ -1,0 +1,124 @@
+@startuml
+
+package "Hoja2a.arbolesbinarios" {
+    interface InterfazArbol<T> {
+    }
+
+    class ArbolBinarioDeBusqueda<T> {
+        -raiz : Nodo<T>
+    }
+
+    class ArbolBinarioDeBusquedaEquilibrado<T> {
+    }
+
+    class Nodo<T> {
+        -izquierda : Nodo<T>
+        -derecha : Nodo<T>
+        -datos : ListaSimplementeEnlazada<T>
+    }
+}
+
+package "MisEstructurasDeDatos" {
+    class ListaSimplementeEnlazada<T> {
+        -primero : Elemento<T>
+        -size : int
+    }
+}
+
+' Relaciones de Interfaz
+InterfazArbol <|.. ArbolBinarioDeBusqueda
+ArbolBinarioDeBusqueda <|-- ArbolBinarioDeBusquedaEquilibrado
+
+' Relaciones Estructurales
+ArbolBinarioDeBusqueda "1" o-- "0..1" Nodo : raiz
+Nodo "1" o-- "0..1" Nodo : izquierda
+Nodo "1" o-- "0..1" Nodo : derecha
+Nodo "1" *-- "1" ListaSimplementeEnlazada : almacena datos
+
+' Relaciones de Dependencia (para dar robustez al diagrama)
+ArbolBinarioDeBusqueda ..> ListaSimplementeEnlazada : genera resultados
+ListaSimplementeEnlazada "1" *-- "n" Elemento : contiene
+
+package "Hoja2b.Grafos" {
+    interface InterfazGrafo<DN, DA> {
+    }
+    interface InterfazDatosNodo {
+    }
+    interface InterfazDatosArista {
+    }
+    interface InterfazAristasConPeso {
+    }
+    class Grafo<DN, DA> {
+        - ListaSimplementeEnlazada<NodoGrafo<DN>> nodos
+        - ListaSimplementeEnlazada<Arista<DN, DA>> aristas
+        - ListaSimplementeEnlazada<String> tipos
+    }
+    class NodoGrafo<DN> {
+        - long id
+        - contadorId = 0 : long
+        - datos : DN
+    }
+    class Arista<DN, DA> {
+        - long id
+        - contadorId = 0 : long
+        - origen NodoGrafo<DN>
+        - datos : DA
+        - destino NodoGrafo<DN>
+    }
+    class DatoNodo {
+        - nombre : String
+        - tipo : String
+    }
+    class DatoArista {
+        - dato : String
+    }
+    class DatoAristaConPeso {
+        - peso : int
+        - dato : String
+    }
+    class DatoDijkstra {
+    }
+    class DatosGrafoJson {
+        - tipos : String[]
+        - tripletas : TripletaJson[]
+    }
+    class TripletaJson {
+        - s : String
+        - p : String
+        - o : String
+    }
+    class LectorGrafoJson {
+    }
+}
+
+' Relaciones de Interfaces
+InterfazGrafo <|.. Grafo
+InterfazDatosNodo <|.. DatoNodo
+InterfazDatosArista <|.. DatoArista
+InterfazAristasConPeso <|.. DatoAristaConPeso
+InterfazDatosArista <|.. DatoAristaConPeso
+
+' Relaciones estructurales del Grafo
+Grafo *-- "1" ListaSimplementeEnlazada : "contiene"
+Grafo "1" *-- "0..*" NodoGrafo : "almacena"
+Grafo "1" *-- "0..*" Arista : "almacena"
+
+' Estructura de la Arista
+Arista "0..*" o-- "1" NodoGrafo : "origen"
+Arista "0..*" o-- "1" NodoGrafo : "destino"
+
+' Relación Nodo/Arista con sus datos genéricos (DN/DA)
+' Aquí indicamos que DN y DA suelen ser las interfaces de datos
+NodoGrafo o-- "1" InterfazDatosNodo : "datos (DN)"
+Arista o-- "1" InterfazDatosArista : "datos (DA)"
+
+' Relaciones de algoritmos
+Grafo ..> DatoDijkstra : "utiliza para cálculos"
+DatoDijkstra o-- "1" NodoGrafo : "referencia"
+
+' Relaciones de persistencia JSON
+LectorGrafoJson ..> Grafo : "instancia"
+LectorGrafoJson ..> DatosGrafoJson : "mapea"
+DatosGrafoJson "1" *-- "0..*" TripletaJson : "contiene"
+
+@enduml
