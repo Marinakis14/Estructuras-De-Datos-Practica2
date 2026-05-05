@@ -26,32 +26,36 @@ direction TB
     InterfazArbol <|.. ArbolBinarioDeBusqueda
     ArbolBinarioDeBusqueda <|-- ArbolBinarioDeBusquedaEquilibrado
 
-    class InterfazArbol {
-        <<interface>>
+    namespace Hoja2a.arbolesbinarios {
+        class InterfazArbol {
+            <<interface>>
+        }
+    
+        class ArbolBinarioDeBusqueda {
+            -Nodo~T~ raiz
+        }
+    
+        class ArbolBinarioDeBusquedaEquilibrado {
+            %% Clase especializada en balanceo (AVL/Red-Black)
+        }
+    
+        class Nodo {
+            -Nodo~T~ izquierda
+            -Nodo~T~ derecha
+            -ListaSimplementeEnlazada~T~ datos
+        }
     }
 
-    class ArbolBinarioDeBusqueda {
-        -Nodo~T~ raiz
-    }
-
-    class ArbolBinarioDeBusquedaEquilibrado {
-        %% Clase especializada en balanceo (AVL/Red-Black)
-    }
-
-    class Nodo {
-        -Nodo~T~ izquierda
-        -Nodo~T~ derecha
-        -ListaSimplementeEnlazada~T~ datos
-    }
-
-    class ListaSimplementeEnlazada {
-        -Elemento~T~ primero
-        -int size
-    }
-
-    class Elemento {
-        -T dato
-        -Elemento~T~ siguiente
+    namespace MisEstructurasDeDatos {
+        class ListaSimplementeEnlazada {
+            -Elemento~T~ primero
+            -int size
+        }
+    
+        class Elemento {
+            -T dato
+            -Elemento~T~ siguiente
+        }
     }
 
     %% Relaciones Estructurales
@@ -73,72 +77,69 @@ direction TB
     InterfazDatosArista <|.. DatoAristaConPeso
     InterfazAristasConPeso <|.. DatoAristaConPeso
 
-    class InterfazGrafo {
-        <<interface>>
-    }
-    class InterfazDatosNodo {
-        <<interface>>
-    }
-    class InterfazDatosArista {
-        <<interface>>
-    }
-    class InterfazAristasConPeso {
-        <<interface>>
-    }
-
-    class Grafo {
-        -Lista~NodoGrafo~ nodos
-        -Lista~Arista~ aristas
-        -Lista~String~ tipos
-    }
-
-    class NodoGrafo {
-        -long id
-        -DN datos
-    }
-
-    class Arista {
-        -long id
-        -NodoGrafo origen
-        -DA datos
-        -NodoGrafo destino
-    }
-
-    class DatoNodo {
-        -String nombre
-        -String tipo
-    }
-
-    class DatoArista {
-        -String dato
-    }
-
-    class DatoAristaConPeso {
-        -int peso
-        -String dato
-    }
-
-    class DatoDijkstra {
-        +NodoGrafo nodo
-        +int distancia
-        +NodoGrafo padre
-        +boolean visitado
-    }
-
-    class DatosGrafoJson {
-        -String[] tipos
-        -TripletaJson[] tripletas
-    }
-
-    class TripletaJson {
-        -String s
-        -String p
-        -String o
-    }
-
-    class ListaSimplementeEnlazada {
-        -Elemento primero
-        -int size
+    namespace Hoja2b.Grafos {
+        class InterfazGrafo {
+            <<interface>>
+        }
+        class InterfazDatosNodo {
+            <<interface>>
+        }
+        class InterfazDatosArista {
+            <<interface>>
+        }
+        class InterfazAristasConPeso {
+            <<interface>>
+        }
+    
+        class Grafo {
+            -Lista~NodoGrafo~ nodos
+            -Lista~Arista~ aristas
+            -Lista~String~ tipos
+        }
+    
+        class NodoGrafo {
+            -long id
+            -DN datos
+        }
+    
+        class Arista {
+            -long id
+            -NodoGrafo origen
+            -DA datos
+            -NodoGrafo destino
+        }
+    
+        class DatoNodo {
+            -String nombre
+            -String tipo
+        }
+    
+        class DatoArista {
+            -String dato
+        }
+    
+        class DatoAristaConPeso {
+            -int peso
+            -String dato
+        }
+    
+        class DatoDijkstra {
+            +NodoGrafo nodo
+            +int distancia
+            +NodoGrafo padre
+            +boolean visitado
+        }
+    
+        class DatosGrafoJson {
+            -String[] tipos
+            -TripletaJson[] tripletas
+        }
+    
+        class TripletaJson {
+            -String s
+            -String p
+            -String o
+        }
     }
 
     %% Relaciones Estructurales
