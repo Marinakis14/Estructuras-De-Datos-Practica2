@@ -148,11 +148,18 @@ package "MisEstructurasDeDatos" {
     }
 }
 
-' Relaciones
+' Relaciones de Interfaz
 InterfazArbol <|.. ArbolBinarioDeBusqueda
 ArbolBinarioDeBusqueda <|-- ArbolBinarioDeBusquedaEquilibrado
-ArbolBinarioDeBusqueda o-- Nodo : raiz
-Nodo o-- Nodo : izquierda/derecha
-Nodo *-- "1" ListaSimplementeEnlazada : datos
+
+' Relaciones Estructurales
+ArbolBinarioDeBusqueda "1" o-- "0..1" Nodo : raiz
+Nodo "1" o-- "0..1" Nodo : izquierda
+Nodo "1" o-- "0..1" Nodo : derecha
+Nodo "1" *-- "1" ListaSimplementeEnlazada : almacena datos
+
+' Relaciones de Dependencia (para dar robustez al diagrama)
+ArbolBinarioDeBusqueda ..> ListaSimplementeEnlazada : genera resultados
+ListaSimplementeEnlazada "1" *-- "n" Elemento : contiene
 
 @enduml
