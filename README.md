@@ -18,19 +18,7 @@ Dentro de las carpetas correspondientes del arbol binario de búsqueda y del gra
 elaborados junto con las clases main y las clases de prueba que no aparecen en este diagrama.
 
 ```mermaid
-%%{init: {
-  'theme': 'base',
-  'themeVariables': {
-    'background': '#ffffff',
-    'primaryColor': '#fcfcfc',
-    'primaryBorderColor': '#2c3e50',
-    'primaryTextColor': '#333333',
-    'lineColor': '#2c3e50',
-    'edgeLabelBackground': 'transparent',
-    'nodeTextColor': '#1a1d21',
-    'classText':'#1a1d21',
-    'classTextColor':'#1a1d21'
-  }
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'primaryColor': '#ffffff', 'primaryBorderColor': '#333', 'primaryTextColor': '#000', 'lineColor': '#444', 'edgeLabelBackground':'transparent', 'tertiaryColor': '#eeeeee'}}}%%
 classDiagram
 direction TB
 
@@ -83,19 +71,7 @@ direction TB
     ListaSimplementeEnlazada "1" *-- "n" Elemento : contiene
 ```
 ```mermaid
-%%{init: {
-  'theme': 'base',
-  'themeVariables': {
-    'background': '#ffffff',
-    'primaryColor': '#fcfcfc',
-    'primaryBorderColor': '#2c3e50',
-    'primaryTextColor': '#333333',
-    'lineColor': '#2c3e50',
-    'edgeLabelBackground': 'transparent',
-    'nodeTextColor': '#1a1d21',
-    'classText':'#1a1d21',
-    'classTextColor':'#1a1d21'
-  }
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#ffffff', 'primaryColor': '#ffffff', 'primaryBorderColor': '#333', 'primaryTextColor': '#000', 'lineColor': '#444', 'edgeLabelBackground':'transparent', 'tertiaryColor': '#eeeeee'}}}%%
 classDiagram
 direction TB
 
