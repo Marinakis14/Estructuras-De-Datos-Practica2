@@ -18,6 +18,7 @@ Dentro de las carpetas correspondientes del arbol binario de búsqueda y del gra
 elaborados junto con las clases main y las clases de prueba que no aparecen en este diagrama.
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'edgeColor': '#27ae60', 'lineColor': '#2980b9', 'tertiaryColor': '#f4f4f4'}}}%%
 classDiagram
 direction TB
 
@@ -68,7 +69,12 @@ direction TB
     %% Relaciones de Dependencia (para dar robustez al diagrama)
     ArbolBinarioDeBusqueda ..> ListaSimplementeEnlazada : genera resultados
     ListaSimplementeEnlazada "1" *-- "n" Elemento : contiene
+```
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#ffffff', 'edgeColor': '#27ae60', 'lineColor': '#2980b9', 'tertiaryColor': '#f4f4f4'}}}%%
+classDiagram
+direction TB
     %% GRAFO
 
     %% Relaciones de Herencia e Interfaz
@@ -140,6 +146,11 @@ direction TB
             -String s
             -String p
             -String o
+        }
+    
+        class ListaSimplementeEnlazada {
+            -Elemento primero
+            -int size
         }
     }
 
